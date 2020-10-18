@@ -19,6 +19,9 @@ import io.swagger.model.NetworkRequest;
 import io.swagger.model.NetworkStatusResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.snowblossom.rosesnow.RoseSnow;
+import snowblossom.node.SnowBlossomNode;
+
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Network  {
   /** 
@@ -53,7 +56,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
       throws Exception
     {
       NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
-      return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+
+      NetworkIdentifier id = req.getNetworkIdentifier();
+
+      SnowBlossomNode node = RoseSnow.getNode(id);
+
+      NetworkStatusResponse status = new NetworkStatusResponse();
+
+
+      return new ResponseContext().entity(status);
     }
 
 }

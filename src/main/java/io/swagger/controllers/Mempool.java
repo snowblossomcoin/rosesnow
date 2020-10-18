@@ -24,13 +24,11 @@ import com.fasterxml.jackson.databind.JsonNode;
    * Code allows you to implement logic incrementally, they are disabled.
    **/
 
-    public ResponseContext mempool(RequestContext request , JsonNode body 
-) {
+    public ResponseContext mempool(RequestContext request , JsonNode body) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
 
-    public ResponseContext mempoolTransaction(RequestContext request , JsonNode body 
-) {
+    public ResponseContext mempoolTransaction(RequestContext request , JsonNode body) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
 

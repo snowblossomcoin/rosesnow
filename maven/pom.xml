@@ -87,7 +87,7 @@
                         <scanTarget>inflector.yaml</scanTarget>
                         <scanTarget>src/main/resources/openapi3.yaml</scanTarget>
                     </scanTargets>
-                    <scanIntervalSeconds>1</scanIntervalSeconds>
+                    <scanIntervalSeconds>120</scanIntervalSeconds>
                     <webApp>
                         <contextPath>/</contextPath>
                     </webApp>
@@ -113,6 +113,11 @@
           <scope>system</scope>
           <systemPath>${project.basedir}/../bazel-bin/RoseSnow_deploy.jar</systemPath>
         </dependency>
+<dependency>
+    <groupId>com.google.guava</groupId>
+    <artifactId>guava</artifactId>
+    <version>18.0</version>
+</dependency>
     </dependencies>
     <repositories>
         <repository>
