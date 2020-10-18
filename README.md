@@ -1,6 +1,6 @@
 # Objective
 
-This project is the Snowblossom implementation of the (Rosetta API)[https://www.rosetta-api.org/]
+This project is the Snowblossom implementation of the [Rosetta API](https://www.rosetta-api.org/)
 
 
 ## Setup source
