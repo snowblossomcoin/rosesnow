@@ -15,6 +15,7 @@ import io.swagger.model.MempoolResponse;
 import io.swagger.model.MempoolTransactionRequest;
 import io.swagger.model.MempoolTransactionResponse;
 import io.swagger.model.NetworkRequest;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Mempool {
   /** 
@@ -23,19 +24,15 @@ import io.swagger.model.NetworkRequest;
    * Code allows you to implement logic incrementally, they are disabled.
    **/
 
-  /*
-    public ResponseContext mempool(RequestContext request , NetworkRequest body 
+    public ResponseContext mempool(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext mempoolTransaction(RequestContext request , MempoolTransactionRequest body 
+    public ResponseContext mempoolTransaction(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
 }
 

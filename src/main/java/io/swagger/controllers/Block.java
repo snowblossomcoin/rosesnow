@@ -15,6 +15,7 @@ import io.swagger.model.BlockResponse;
 import io.swagger.model.BlockTransactionRequest;
 import io.swagger.model.BlockTransactionResponse;
 import io.swagger.model.Error;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Block  {
   /** 
@@ -23,19 +24,14 @@ import io.swagger.model.Error;
    * Code allows you to implement logic incrementally, they are disabled.
    **/
 
-  /*
-    public ResponseContext block(RequestContext request , BlockRequest body 
+    public ResponseContext block(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext blockTransaction(RequestContext request , BlockTransactionRequest body 
-) {
+    public ResponseContext blockTransaction(RequestContext request , JsonNode body ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
 }
 

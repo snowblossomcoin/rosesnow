@@ -13,6 +13,7 @@ import io.swagger.model.*;
 import io.swagger.model.CallRequest;
 import io.swagger.model.CallResponse;
 import io.swagger.model.Error;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Call {
   /** 
@@ -21,12 +22,10 @@ import io.swagger.model.Error;
    * Code allows you to implement logic incrementally, they are disabled.
    **/
 
-  /*
-    public ResponseContext call(RequestContext request , CallRequest body 
+    public ResponseContext call(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
 }
 

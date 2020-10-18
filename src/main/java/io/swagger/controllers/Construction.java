@@ -26,6 +26,7 @@ import io.swagger.model.ConstructionPreprocessResponse;
 import io.swagger.model.ConstructionSubmitRequest;
 import io.swagger.model.Error;
 import io.swagger.model.TransactionIdentifierResponse;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Construction {
   /** 
@@ -34,61 +35,45 @@ import io.swagger.model.TransactionIdentifierResponse;
    * Code allows you to implement logic incrementally, they are disabled.
    **/
 
-  /*
-    public ResponseContext constructionCombine(RequestContext request , ConstructionCombineRequest body 
+    public ResponseContext constructionCombine(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext constructionDerive(RequestContext request , ConstructionDeriveRequest body 
+    public ResponseContext constructionDerive(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext constructionHash(RequestContext request , ConstructionHashRequest body 
+    public ResponseContext constructionHash(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext constructionMetadata(RequestContext request , ConstructionMetadataRequest body 
+    public ResponseContext constructionMetadata(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext constructionParse(RequestContext request , ConstructionParseRequest body 
+    public ResponseContext constructionParse(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext constructionPayloads(RequestContext request , ConstructionPayloadsRequest body 
+    public ResponseContext constructionPayloads(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext constructionPreprocess(RequestContext request , ConstructionPreprocessRequest body 
+    public ResponseContext constructionPreprocess(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext constructionSubmit(RequestContext request , ConstructionSubmitRequest body 
+    public ResponseContext constructionSubmit(RequestContext request , JsonNode body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
 }
 

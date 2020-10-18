@@ -38,19 +38,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 
   }
 
-  /*
-    public ResponseContext networkOptions(RequestContext request , NetworkRequest body 
-) {
+    public ResponseContext networkOptions(RequestContext request , JsonNode body ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
-  /*
-    public ResponseContext networkStatus(RequestContext request , NetworkRequest body 
-) {
+    public ResponseContext networkStatus(RequestContext request , JsonNode body ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
-  */
 
 }
 
