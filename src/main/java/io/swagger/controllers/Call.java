@@ -10,13 +10,11 @@ import java.util.List;
 
 import io.swagger.model.*;
 
-import io.swagger.model.BlockRequest;
-import io.swagger.model.BlockResponse;
-import io.swagger.model.BlockTransactionRequest;
-import io.swagger.model.BlockTransactionResponse;
+import io.swagger.model.CallRequest;
+import io.swagger.model.CallResponse;
 import io.swagger.model.Error;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class BlockController  {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Call {
   /** 
    * Uncomment and implement as you see fit.  These operations will map
    * Directly to operation calls from the routing logic.  Because the inflector
@@ -24,14 +22,7 @@ import io.swagger.model.Error;
    **/
 
   /*
-    public ResponseContext block(RequestContext request , BlockRequest body 
-) {
-        return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
-    }
-  */
-
-  /*
-    public ResponseContext blockTransaction(RequestContext request , BlockTransactionRequest body 
+    public ResponseContext call(RequestContext request , CallRequest body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }

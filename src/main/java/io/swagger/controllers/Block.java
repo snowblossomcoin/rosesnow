@@ -10,13 +10,13 @@ import java.util.List;
 
 import io.swagger.model.*;
 
+import io.swagger.model.BlockRequest;
+import io.swagger.model.BlockResponse;
+import io.swagger.model.BlockTransactionRequest;
+import io.swagger.model.BlockTransactionResponse;
 import io.swagger.model.Error;
-import io.swagger.model.MempoolResponse;
-import io.swagger.model.MempoolTransactionRequest;
-import io.swagger.model.MempoolTransactionResponse;
-import io.swagger.model.NetworkRequest;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class MempoolController  {
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Block  {
   /** 
    * Uncomment and implement as you see fit.  These operations will map
    * Directly to operation calls from the routing logic.  Because the inflector
@@ -24,14 +24,14 @@ import io.swagger.model.NetworkRequest;
    **/
 
   /*
-    public ResponseContext mempool(RequestContext request , NetworkRequest body 
+    public ResponseContext block(RequestContext request , BlockRequest body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
   */
 
   /*
-    public ResponseContext mempoolTransaction(RequestContext request , MempoolTransactionRequest body 
+    public ResponseContext blockTransaction(RequestContext request , BlockTransactionRequest body 
 ) {
         return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
