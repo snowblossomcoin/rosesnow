@@ -18,6 +18,7 @@ import io.swagger.model.NetworkOptionsResponse;
 import io.swagger.model.NetworkRequest;
 import io.swagger.model.NetworkStatusResponse;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Network  {
   /** 
@@ -27,7 +28,10 @@ import com.fasterxml.jackson.databind.JsonNode;
    **/
   
   public ResponseContext networkList(RequestContext request , JsonNode body ) 
+    throws Exception
   {
+    MetadataRequest req = new ObjectMapper().readValue(body.toString(), MetadataRequest.class);
+
 		LinkedList<NetworkIdentifier> lst = new LinkedList<>();
 
     lst.add(new NetworkIdentifier().blockchain("snowblossom").network("mainnet"));
@@ -38,12 +42,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 
   }
 
-    public ResponseContext networkOptions(RequestContext request , JsonNode body ) {
-        return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+    public ResponseContext networkOptions(RequestContext request , JsonNode body )
+      throws Exception
+    {
+      NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
+      return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
 
-    public ResponseContext networkStatus(RequestContext request , JsonNode body ) {
-        return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+    public ResponseContext networkStatus(RequestContext request , JsonNode body )
+      throws Exception
+    {
+      NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
+      return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
     }
 
 }
