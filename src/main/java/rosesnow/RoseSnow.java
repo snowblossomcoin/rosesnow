@@ -69,8 +69,8 @@ public class RoseSnow
   
   public static String getBaseDbPath()
   {
-    // TODO - do something smart
-    return "/home/nerd/db/rose";
+    // matching rosetta api expectations
+    return "/data/snowblossom/db";
   }
 
 }

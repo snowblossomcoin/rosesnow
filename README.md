@@ -27,4 +27,23 @@ The reason is, we want to use bazel to bring in Snowblossom libraries, including
 node, client, gRPC, etc.  But I can't figure out how to start jetty other than
 using the maven plugin (I'm sure this is my failing, but doing this hack for now).
 
+## Configuration
+
+The package is intended to take no configuration.
+All data is stored in /data/snowblossom (as per Rosetta API expectations).
+
+Testnet vs Mainnet and Online vs Offline are all controlled by which APIs are called.
+
+If you call an API that requests the node to be running, the node will be started.
+So if you call only offline APIs, the no node will be started.
+
+If you call /network/status on both mainnet and testnet, then both mainnet and testnet nodes
+will be running for the duration of the process.  It is fine to run both on the same instance.
+Not that I think that is likely to be required, but whatever.
+
+The downside is that you can't just start it up and wait for it to sync.  You need to call something
+to get it going get the node started.  However, my guess is that integrations will poll /network/status
+for an online node so it should work fine.
+
+
 
