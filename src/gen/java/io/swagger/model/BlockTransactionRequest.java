@@ -9,10 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * A BlockTransactionRequest is used to fetch a Transaction included in a block that is not returned in a BlockResponse. 
+ * A BlockTransactionRequest is used to fetch a Transaction included in a block that is not returned in a BlockResponse.
  **/
-@Schema(description = "A BlockTransactionRequest is used to fetch a Transaction included in a block that is not returned in a BlockResponse. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "A BlockTransactionRequest is used to fetch a Transaction included in a block that is not returned in a BlockResponse.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class BlockTransactionRequest   {
   @JsonProperty("network_identifier")
   private NetworkIdentifier networkIdentifier = null;

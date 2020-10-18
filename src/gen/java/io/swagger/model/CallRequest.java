@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * CallRequest is the input to the &#x60;/call&#x60; endpoint. 
+ * CallRequest is the input to the &#x60;/call&#x60; endpoint.
  **/
-@Schema(description = "CallRequest is the input to the `/call` endpoint. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "CallRequest is the input to the `/call` endpoint.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class CallRequest   {
   @JsonProperty("network_identifier")
   private NetworkIdentifier networkIdentifier = null;
@@ -36,7 +36,7 @@ public class CallRequest   {
   }
 
   /**
-   * Method is some network-specific procedure call. This method could map to a network-specific RPC endpoint, a method in an SDK generated from a smart contract, or some hybrid of the two.  The implementation must define all available methods in the Allow object. However, it is up to the caller to determine which parameters to provide when invoking `/call`. 
+   * Method is some network-specific procedure call. This method could map to a network-specific RPC endpoint, a method in an SDK generated from a smart contract, or some hybrid of the two. The implementation must define all available methods in the Allow object. However, it is up to the caller to determine which parameters to provide when invoking `/call`.
    **/
   public CallRequest method(String method) {
     this.method = method;
@@ -44,7 +44,7 @@ public class CallRequest   {
   }
 
   
-  @Schema(example = "eth_call", required = true, description = "Method is some network-specific procedure call. This method could map to a network-specific RPC endpoint, a method in an SDK generated from a smart contract, or some hybrid of the two.  The implementation must define all available methods in the Allow object. However, it is up to the caller to determine which parameters to provide when invoking `/call`. ")
+  @Schema(example = "eth_call", required = true, description = "Method is some network-specific procedure call. This method could map to a network-specific RPC endpoint, a method in an SDK generated from a smart contract, or some hybrid of the two. The implementation must define all available methods in the Allow object. However, it is up to the caller to determine which parameters to provide when invoking `/call`.")
   @JsonProperty("method")
   public String getMethod() {
     return method;
@@ -54,7 +54,7 @@ public class CallRequest   {
   }
 
   /**
-   * Parameters is some network-specific argument for a method. It is up to the caller to determine which parameters to provide when invoking `/call`. 
+   * Parameters is some network-specific argument for a method. It is up to the caller to determine which parameters to provide when invoking `/call`.
    **/
   public CallRequest parameters(Object parameters) {
     this.parameters = parameters;
@@ -62,7 +62,7 @@ public class CallRequest   {
   }
 
   
-  @Schema(example = "{\"block_number\":23,\"address\":\"0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5\"}", required = true, description = "Parameters is some network-specific argument for a method. It is up to the caller to determine which parameters to provide when invoking `/call`. ")
+  @Schema(example = "{\"block_number\":23,\"address\":\"0x52bc44d5378309ee2abf1539bf71de1b7d7be3b5\"}", required = true, description = "Parameters is some network-specific argument for a method. It is up to the caller to determine which parameters to provide when invoking `/call`.")
   @JsonProperty("parameters")
   public Object getParameters() {
     return parameters;

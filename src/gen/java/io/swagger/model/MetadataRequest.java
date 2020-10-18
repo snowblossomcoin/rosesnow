@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * A MetadataRequest is utilized in any request where the only argument is optional metadata. 
+ * A MetadataRequest is utilized in any request where the only argument is optional metadata.
  **/
-@Schema(description = "A MetadataRequest is utilized in any request where the only argument is optional metadata. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "A MetadataRequest is utilized in any request where the only argument is optional metadata.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class MetadataRequest   {
   @JsonProperty("metadata")
   private Object metadata = null;

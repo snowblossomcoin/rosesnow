@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * ConstructionParseRequest is the input to the &#x60;/construction/parse&#x60; endpoint. It allows the caller to parse either an unsigned or signed transaction. 
+ * ConstructionParseRequest is the input to the &#x60;/construction/parse&#x60; endpoint. It allows the caller to parse either an unsigned or signed transaction.
  **/
-@Schema(description = "ConstructionParseRequest is the input to the `/construction/parse` endpoint. It allows the caller to parse either an unsigned or signed transaction. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "ConstructionParseRequest is the input to the `/construction/parse` endpoint. It allows the caller to parse either an unsigned or signed transaction.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class ConstructionParseRequest   {
   @JsonProperty("network_identifier")
   private NetworkIdentifier networkIdentifier = null;
@@ -36,7 +36,7 @@ public class ConstructionParseRequest   {
   }
 
   /**
-   * Signed is a boolean indicating whether the transaction is signed. 
+   * Signed is a boolean indicating whether the transaction is signed.
    **/
   public ConstructionParseRequest signed(Boolean signed) {
     this.signed = signed;
@@ -44,7 +44,7 @@ public class ConstructionParseRequest   {
   }
 
   
-  @Schema(required = true, description = "Signed is a boolean indicating whether the transaction is signed. ")
+  @Schema(required = true, description = "Signed is a boolean indicating whether the transaction is signed.")
   @JsonProperty("signed")
   public Boolean isSigned() {
     return signed;
@@ -54,7 +54,7 @@ public class ConstructionParseRequest   {
   }
 
   /**
-   * This must be either the unsigned transaction blob returned by `/construction/payloads` or the signed transaction blob returned by `/construction/combine`. 
+   * This must be either the unsigned transaction blob returned by `/construction/payloads` or the signed transaction blob returned by `/construction/combine`.
    **/
   public ConstructionParseRequest transaction(String transaction) {
     this.transaction = transaction;
@@ -62,7 +62,7 @@ public class ConstructionParseRequest   {
   }
 
   
-  @Schema(required = true, description = "This must be either the unsigned transaction blob returned by `/construction/payloads` or the signed transaction blob returned by `/construction/combine`. ")
+  @Schema(required = true, description = "This must be either the unsigned transaction blob returned by `/construction/payloads` or the signed transaction blob returned by `/construction/combine`.")
   @JsonProperty("transaction")
   public String getTransaction() {
     return transaction;

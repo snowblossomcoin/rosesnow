@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * A BlockRequest is utilized to make a block request on the /block endpoint. 
+ * A BlockRequest is utilized to make a block request on the /block endpoint.
  **/
-@Schema(description = "A BlockRequest is utilized to make a block request on the /block endpoint. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "A BlockRequest is utilized to make a block request on the /block endpoint.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class BlockRequest   {
   @JsonProperty("network_identifier")
   private NetworkIdentifier networkIdentifier = null;

@@ -11,10 +11,10 @@ import java.util.List;
 
 
 /**
- * An AccountBalanceResponse is returned on the /account/balance endpoint. If an account has a balance for each AccountIdentifier describing it (ex: an ERC-20 token balance on a few smart contracts), an account balance request must be made with each AccountIdentifier. 
+ * An AccountBalanceResponse is returned on the /account/balance endpoint. If an account has a balance for each AccountIdentifier describing it (ex: an ERC-20 token balance on a few smart contracts), an account balance request must be made with each AccountIdentifier.
  **/
-@Schema(description = "An AccountBalanceResponse is returned on the /account/balance endpoint. If an account has a balance for each AccountIdentifier describing it (ex: an ERC-20 token balance on a few smart contracts), an account balance request must be made with each AccountIdentifier. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "An AccountBalanceResponse is returned on the /account/balance endpoint. If an account has a balance for each AccountIdentifier describing it (ex: an ERC-20 token balance on a few smart contracts), an account balance request must be made with each AccountIdentifier.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class AccountBalanceResponse   {
   @JsonProperty("block_identifier")
   private BlockIdentifier blockIdentifier = null;
@@ -42,7 +42,7 @@ public class AccountBalanceResponse   {
   }
 
   /**
-   * A single account may have a balance in multiple currencies. 
+   * A single account may have a balance in multiple currencies.
    **/
   public AccountBalanceResponse balances(List<Amount> balances) {
     this.balances = balances;
@@ -50,7 +50,7 @@ public class AccountBalanceResponse   {
   }
 
   
-  @Schema(required = true, description = "A single account may have a balance in multiple currencies. ")
+  @Schema(required = true, description = "A single account may have a balance in multiple currencies.")
   @JsonProperty("balances")
   public List<Amount> getBalances() {
     return balances;
@@ -60,7 +60,7 @@ public class AccountBalanceResponse   {
   }
 
   /**
-   * If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier should be returned alongside the balance. It is highly recommended to populate this field so that users of the Rosetta API implementation don't need to maintain their own indexer to track their UTXOs. 
+   * If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier should be returned alongside the balance. It is highly recommended to populate this field so that users of the Rosetta API implementation don't need to maintain their own indexer to track their UTXOs.
    **/
   public AccountBalanceResponse coins(List<Coin> coins) {
     this.coins = coins;
@@ -68,7 +68,7 @@ public class AccountBalanceResponse   {
   }
 
   
-  @Schema(description = "If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier should be returned alongside the balance. It is highly recommended to populate this field so that users of the Rosetta API implementation don't need to maintain their own indexer to track their UTXOs. ")
+  @Schema(description = "If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier should be returned alongside the balance. It is highly recommended to populate this field so that users of the Rosetta API implementation don't need to maintain their own indexer to track their UTXOs.")
   @JsonProperty("coins")
   public List<Coin> getCoins() {
     return coins;
@@ -78,7 +78,7 @@ public class AccountBalanceResponse   {
   }
 
   /**
-   * Account-based blockchains that utilize a nonce or sequence number should include that number in the metadata. This number could be unique to the identifier or global across the account address. 
+   * Account-based blockchains that utilize a nonce or sequence number should include that number in the metadata. This number could be unique to the identifier or global across the account address.
    **/
   public AccountBalanceResponse metadata(Object metadata) {
     this.metadata = metadata;
@@ -86,7 +86,7 @@ public class AccountBalanceResponse   {
   }
 
   
-  @Schema(example = "{\"sequence_number\":23}", description = "Account-based blockchains that utilize a nonce or sequence number should include that number in the metadata. This number could be unique to the identifier or global across the account address. ")
+  @Schema(example = "{\"sequence_number\":23}", description = "Account-based blockchains that utilize a nonce or sequence number should include that number in the metadata. This number could be unique to the identifier or global across the account address.")
   @JsonProperty("metadata")
   public Object getMetadata() {
     return metadata;

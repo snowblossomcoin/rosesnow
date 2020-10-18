@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * The transaction submission request includes a signed transaction. 
+ * The transaction submission request includes a signed transaction.
  **/
-@Schema(description = "The transaction submission request includes a signed transaction. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "The transaction submission request includes a signed transaction.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class ConstructionSubmitRequest   {
   @JsonProperty("network_identifier")
   private NetworkIdentifier networkIdentifier = null;

@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * ConstructionDeriveResponse is returned by the &#x60;/construction/derive&#x60; endpoint. 
+ * ConstructionDeriveResponse is returned by the &#x60;/construction/derive&#x60; endpoint.
  **/
-@Schema(description = "ConstructionDeriveResponse is returned by the `/construction/derive` endpoint. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "ConstructionDeriveResponse is returned by the `/construction/derive` endpoint.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class ConstructionDeriveResponse   {
   @JsonProperty("address")
   private String address = null;
@@ -19,7 +19,7 @@ public class ConstructionDeriveResponse   {
   @JsonProperty("metadata")
   private Object metadata = null;
   /**
-   * [DEPRECATED by `account_identifier` in `v1.4.4`] Address in network-specific format. 
+   * [DEPRECATED by `account_identifier` in `v1.4.4`] Address in network-specific format.
    **/
   public ConstructionDeriveResponse address(String address) {
     this.address = address;
@@ -27,7 +27,7 @@ public class ConstructionDeriveResponse   {
   }
 
   
-  @Schema(description = "[DEPRECATED by `account_identifier` in `v1.4.4`] Address in network-specific format. ")
+  @Schema(description = "[DEPRECATED by `account_identifier` in `v1.4.4`] Address in network-specific format.")
   @JsonProperty("address")
   public String getAddress() {
     return address;

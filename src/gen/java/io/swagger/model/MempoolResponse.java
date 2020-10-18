@@ -9,10 +9,10 @@ import java.util.List;
 
 
 /**
- * A MempoolResponse contains all transaction identifiers in the mempool for a particular network_identifier. 
+ * A MempoolResponse contains all transaction identifiers in the mempool for a particular network_identifier.
  **/
-@Schema(description = "A MempoolResponse contains all transaction identifiers in the mempool for a particular network_identifier. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "A MempoolResponse contains all transaction identifiers in the mempool for a particular network_identifier.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class MempoolResponse   {
   @JsonProperty("transaction_identifiers")
   private List<TransactionIdentifier> transactionIdentifiers = new ArrayList<>();

@@ -6,17 +6,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * CallResponse contains the result of a &#x60;/call&#x60; invocation. 
+ * CallResponse contains the result of a &#x60;/call&#x60; invocation.
  **/
-@Schema(description = "CallResponse contains the result of a `/call` invocation. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "CallResponse contains the result of a `/call` invocation.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class CallResponse   {
   @JsonProperty("result")
   private Object result = null;
   @JsonProperty("idempotent")
   private Boolean idempotent = null;
   /**
-   * Result contains the result of the `/call` invocation. This result will not be inspected or interpreted by Rosetta tooling and is left to the caller to decode. 
+   * Result contains the result of the `/call` invocation. This result will not be inspected or interpreted by Rosetta tooling and is left to the caller to decode.
    **/
   public CallResponse result(Object result) {
     this.result = result;
@@ -24,7 +24,7 @@ public class CallResponse   {
   }
 
   
-  @Schema(example = "{\"count\":1000}", required = true, description = "Result contains the result of the `/call` invocation. This result will not be inspected or interpreted by Rosetta tooling and is left to the caller to decode. ")
+  @Schema(example = "{\"count\":1000}", required = true, description = "Result contains the result of the `/call` invocation. This result will not be inspected or interpreted by Rosetta tooling and is left to the caller to decode.")
   @JsonProperty("result")
   public Object getResult() {
     return result;
@@ -34,7 +34,7 @@ public class CallResponse   {
   }
 
   /**
-   * Idempotent indicates that if `/call` is invoked with the same CallRequest again, at any point in time, it will return the same CallResponse.  Integrators may cache the CallResponse if this is set to true to avoid making unnecessary calls to the Rosetta implementation. For this reason, implementers should be very conservative about returning true here or they could cause issues for the caller. 
+   * Idempotent indicates that if `/call` is invoked with the same CallRequest again, at any point in time, it will return the same CallResponse. Integrators may cache the CallResponse if this is set to true to avoid making unnecessary calls to the Rosetta implementation. For this reason, implementers should be very conservative about returning true here or they could cause issues for the caller.
    **/
   public CallResponse idempotent(Boolean idempotent) {
     this.idempotent = idempotent;
@@ -42,7 +42,7 @@ public class CallResponse   {
   }
 
   
-  @Schema(required = true, description = "Idempotent indicates that if `/call` is invoked with the same CallRequest again, at any point in time, it will return the same CallResponse.  Integrators may cache the CallResponse if this is set to true to avoid making unnecessary calls to the Rosetta implementation. For this reason, implementers should be very conservative about returning true here or they could cause issues for the caller. ")
+  @Schema(required = true, description = "Idempotent indicates that if `/call` is invoked with the same CallRequest again, at any point in time, it will return the same CallResponse. Integrators may cache the CallResponse if this is set to true to avoid making unnecessary calls to the Rosetta implementation. For this reason, implementers should be very conservative about returning true here or they could cause issues for the caller.")
   @JsonProperty("idempotent")
   public Boolean isIdempotent() {
     return idempotent;

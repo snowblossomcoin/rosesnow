@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * NetworkOptionsResponse contains information about the versioning of the node and the allowed operation statuses, operation types, and errors. 
+ * NetworkOptionsResponse contains information about the versioning of the node and the allowed operation statuses, operation types, and errors.
  **/
-@Schema(description = "NetworkOptionsResponse contains information about the versioning of the node and the allowed operation statuses, operation types, and errors. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "NetworkOptionsResponse contains information about the versioning of the node and the allowed operation statuses, operation types, and errors.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class NetworkOptionsResponse   {
   @JsonProperty("version")
   private Version version = null;

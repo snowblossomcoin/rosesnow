@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * ConstructionHashRequest is the input to the &#x60;/construction/hash&#x60; endpoint. 
+ * ConstructionHashRequest is the input to the &#x60;/construction/hash&#x60; endpoint.
  **/
-@Schema(description = "ConstructionHashRequest is the input to the `/construction/hash` endpoint. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "ConstructionHashRequest is the input to the `/construction/hash` endpoint.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class ConstructionHashRequest   {
   @JsonProperty("network_identifier")
   private NetworkIdentifier networkIdentifier = null;

@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 /**
- * A BlockTransactionResponse contains information about a block transaction. 
+ * A BlockTransactionResponse contains information about a block transaction.
  **/
-@Schema(description = "A BlockTransactionResponse contains information about a block transaction. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-15T17:54:45.833Z[GMT]")
+@Schema(description = "A BlockTransactionResponse contains information about a block transaction.")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class BlockTransactionResponse   {
   @JsonProperty("transaction")
   private Transaction transaction = null;

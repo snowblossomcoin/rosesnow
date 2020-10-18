@@ -61,7 +61,6 @@ SigningPayload : io.swagger.model.SigningPayload
 SubAccountIdentifier : io.swagger.model.SubAccountIdentifier
 SubNetworkIdentifier : io.swagger.model.SubNetworkIdentifier
 SyncStatus : io.swagger.model.SyncStatus
-Timestamp : io.swagger.model.Timestamp
 Transaction : io.swagger.model.Transaction
 TransactionIdentifier : io.swagger.model.TransactionIdentifier
 TransactionIdentifierResponse : io.swagger.model.TransactionIdentifierResponse

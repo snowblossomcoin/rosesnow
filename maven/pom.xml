@@ -10,7 +10,7 @@
     <artifactId>snowrosetta</artifactId>
     <packaging>war</packaging>
     <name>snowrosetta</name>
-    <version>1.0.0</version>
+    <version>rosesnow</version>
 
     <licenses>
         <license>
@@ -106,13 +106,13 @@
             <artifactId>swagger-inflector</artifactId>
             <version>${swagger-inflector-version}</version>
         </dependency>
-<dependency>
-    <groupId>rosesnow</groupId>
-    <artifactId>sample</artifactId>
-    <version>1.0</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/../bazel-bin/RoseSnow_deploy.jar</systemPath>
-</dependency>
+        <dependency>
+          <groupId>rosesnow</groupId>
+          <artifactId>sample</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/../bazel-bin/RoseSnow_deploy.jar</systemPath>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
@@ -130,7 +130,7 @@
         <logback-version>1.0.1</logback-version>
         <junit-version>4.8.2</junit-version>
         <slf4j-version>1.6.3</slf4j-version>
-        <swagger-inflector-version>2.0.4</swagger-inflector-version>
+        <swagger-inflector-version>2.0.5</swagger-inflector-version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
