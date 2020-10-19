@@ -21,6 +21,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.snowblossom.rosesnow.RoseSnow;
 import snowblossom.node.SnowBlossomNode;
+import snowblossom.lib.ChainHash;
+import snowblossom.proto.BlockHeader;
+import snowblossom.node.PeerLink;
 
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Network  {
@@ -45,12 +48,13 @@ import snowblossom.node.SnowBlossomNode;
 
   }
 
-    public ResponseContext networkOptions(RequestContext request , JsonNode body )
-      throws Exception
-    {
-      NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
-      return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
-    }
+  public ResponseContext networkOptions(RequestContext request , JsonNode body )
+    throws Exception
+  {
+    NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
+
+    return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+  }
 
     public ResponseContext networkStatus(RequestContext request , JsonNode body )
       throws Exception
@@ -62,6 +66,46 @@ import snowblossom.node.SnowBlossomNode;
       SnowBlossomNode node = RoseSnow.getNode(id);
 
       NetworkStatusResponse status = new NetworkStatusResponse();
+
+      SyncStatus sync = new SyncStatus();
+      sync.setStage("catch_up");
+
+      if (node.getBlockIngestor().getHead() != null)
+      {
+        BlockHeader head = node.getBlockIngestor().getHead().getHeader();
+
+        ChainHash hash = new ChainHash( head.getSnowHash());
+        status.setCurrentBlockIdentifier( new BlockIdentifier()
+          .index((long)head.getBlockHeight())
+          .hash(hash.toString()));
+        status.setCurrentBlockTimestamp( head.getTimestamp() );
+
+        sync.setCurrentIndex( (long)head.getBlockHeight() );
+        sync.setTargetIndex( (long)node.getPeerage().getHighestSeenHeader().getBlockHeight() );
+        if (node.areWeSynced())
+        {
+          sync.setStage("synced");
+        }
+      }
+
+      if (node.getDB().getBlockHashAtHeight(0) != null)
+      {
+        ChainHash hash = node.getDB().getBlockHashAtHeight(0);
+        BlockIdentifier gen = new BlockIdentifier().index(0L).hash(hash.toString());
+        status.setOldestBlockIdentifier(gen);
+        status.setGenesisBlockIdentifier(gen);
+
+      }
+      for(PeerLink link : node.getPeerage().getLinkList())
+      {
+        status.getPeers().add(new Peer().peerId( link.getLinkId() ) );
+      }
+
+
+
+      status.setSyncStatus(sync);
+
+
 
 
       return new ResponseContext().entity(status);

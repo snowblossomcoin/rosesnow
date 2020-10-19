@@ -8,7 +8,7 @@ java_library(
     "@snowblossom//lib:lib",
     "@snowblossom//lib:rocksdb",
     "@snowblossom//node",
-    "@snowblossom//iceleaf-ui:iceleaf",
+    "@snowblossom//protolib:protogrpc",
     "@duckutil//:duckutil_lib",
     "@duckutil//:webserver_lib",
     "@duckutil//:duckutil_jsonrpc_lib",
@@ -35,6 +35,14 @@ java_binary(
   main_class = "org.snowblossom.RoseSnow",
   runtime_deps = [
     ":rosesnowlib",
+  ],
+)
+
+java_binary(
+  name = "JettyRun",
+  main_class = "org.eclipse.jetty.runner.Runner",
+  runtime_deps = [
+    "@maven//:org_eclipse_jetty_jetty_runner"
   ],
 )
 

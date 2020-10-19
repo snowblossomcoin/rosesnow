@@ -9,6 +9,7 @@ import java.util.HashMap;
 import duckutil.ConfigMem;
 import java.util.TreeMap;
 import snowblossom.lib.Globals;
+import snowblossom.lib.LogSetup;
 
 /**
  * The idea here is we have a bunch of static methods that can be called
@@ -55,8 +56,19 @@ public class RoseSnow
       cm.put("tx_index", "true");
       cm.put("addr_index", "true");
       cm.put("db_path", getBaseDbPath() +"/" + network);
+
+      ConfigMem config = new ConfigMem(cm);
+
+      LogSetup.setup(config);
+      LogSetup.fixLevels();
   
       SnowBlossomNode node = new SnowBlossomNode(new ConfigMem(cm));
+
+      for(int i=0; i<2; i++)
+      {
+        Thread.sleep(1000);
+        LogSetup.fixLevels();
+      }
 
       node_map.put(id, node);
 

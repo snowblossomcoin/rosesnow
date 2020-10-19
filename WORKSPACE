@@ -51,6 +51,7 @@ maven_install(
   			"org.bitlet:weupnp:0.1.4",
         "io.netty:netty-handler:4.1.34.Final",
         "io.swagger:swagger-inflector:2.0.5",
+        "org.eclipse.jetty:jetty-runner:9.4.32.v20200930",
     ],
     repositories = [
         "https://repo1.maven.org/maven2",
@@ -70,7 +71,7 @@ pinned_maven_install()
 git_repository(
   name = "snowblossom",
   remote = "https://github.com/snowblossomcoin/snowblossom",
-	commit = "bcd4a0438cef33bea523c268fd92036604a3707e",
+	commit = "30da628abcd48b88c8884561867c37566963b7b6",
   shallow_since = "1595994852 -0700"
 )
 

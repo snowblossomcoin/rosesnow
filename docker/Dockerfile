@@ -8,18 +8,18 @@ RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
 RUN apt-get update
 RUN apt-get install --yes bazel
 
-RUN mkdir -p /data/snowblossom
-WORKDIR /data/snowblossom
+RUN mkdir -p /var/build/snow
+WORKDIR /var/build/snowblossom
 
 
 # TODO - make this cleaner, probably involving tags
 RUN git clone https://github.com/snowblossomcoin/rosesnow.git rosesnow.git
-WORKDIR /data/snowblossom/rosesnow.git
+WORKDIR /var/build/snowblossom/rosesnow.git
 RUN git pull && git checkout 1a5ee86c1eb16946011bdfb4d28ea6eaff6bb068 
 
 RUN bazel build :RoseSnow_deploy.jar
 
-WORKDIR /data/snowblossom/rosesnow.git/maven
+WORKDIR /var/build/snowblossom/rosesnow.git/maven
 
 EXPOSE 8080/tcp
 
