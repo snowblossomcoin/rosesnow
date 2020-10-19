@@ -12,12 +12,9 @@ RUN apt-get install --yes bazel
 RUN mkdir -p /var/build/snow
 WORKDIR /var/build/snowblossom
 
+RUN git clone https://github.com/snowblossomcoin/rosesnow.git -b v0.1 rosesnow.git
 
-# TODO - make this cleaner, probably involving tags
-RUN git clone https://github.com/snowblossomcoin/rosesnow.git rosesnow.git
 WORKDIR /var/build/snowblossom/rosesnow.git
-RUN git pull && git checkout 1a5ee86c1eb16946011bdfb4d28ea6eaff6bb068 
-
 RUN bazel build :RoseSnow_deploy.jar
 
 WORKDIR /var/build/snowblossom/rosesnow.git/maven

@@ -11,6 +11,15 @@ import java.util.TreeMap;
 import snowblossom.lib.Globals;
 import snowblossom.lib.LogSetup;
 
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
+
+
 /**
  * The idea here is we have a bunch of static methods that can be called
  * from the API controller classes.  Everything should be thread safe.
@@ -66,12 +75,6 @@ public class RoseSnow
       LogSetup.fixLevels();
   
       SnowBlossomNode node = new SnowBlossomNode(new ConfigMem(cm));
-
-      for(int i=0; i<2; i++)
-      {
-        Thread.sleep(1000);
-        LogSetup.fixLevels();
-      }
 
       node_map.put(id, node);
 

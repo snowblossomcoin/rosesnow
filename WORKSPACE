@@ -46,12 +46,17 @@ maven_install(
         "net.minidev:json-smart:2.3",
         "com.lambdaworks:scrypt:1.4.0",
         "com.google.zxing:javase:3.4.0",
-        "org.slf4j:slf4j-nop:1.7.25",
         "org.bitcoinj:bitcoinj-core:0.14.7",
   			"org.bitlet:weupnp:0.1.4",
         "io.netty:netty-handler:4.1.34.Final",
         "io.swagger:swagger-inflector:2.0.5",
         "org.eclipse.jetty:jetty-runner:9.4.32.v20200930",
+        "org.slf4j:slf4j-api:1.7.30",
+        "org.slf4j:slf4j-ext:1.7.30",
+        "org.slf4j:slf4j-nop:1.7.30",
+        "ch.qos.logback:logback-classic:1.2.3",
+        "ch.qos.logback:logback-core:1.2.3",
+
     ],
     repositories = [
         "https://repo1.maven.org/maven2",
