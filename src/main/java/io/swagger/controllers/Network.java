@@ -1,50 +1,39 @@
 package io.swagger.controllers;
 
-import io.swagger.oas.inflector.models.RequestContext;
-import io.swagger.oas.inflector.models.ResponseContext;
-import javax.ws.rs.core.Response.Status;
-
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import java.io.File;
-import java.util.List;
-import java.util.LinkedList;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.*;
-
-import io.swagger.model.Error;
 import io.swagger.model.MetadataRequest;
 import io.swagger.model.NetworkListResponse;
 import io.swagger.model.NetworkOptionsResponse;
 import io.swagger.model.NetworkRequest;
 import io.swagger.model.NetworkStatusResponse;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.oas.inflector.models.RequestContext;
+import io.swagger.oas.inflector.models.ResponseContext;
+import java.util.LinkedList;
 import org.snowblossom.rosesnow.RoseSnow;
-import snowblossom.node.SnowBlossomNode;
 import snowblossom.lib.ChainHash;
-import snowblossom.proto.BlockHeader;
+import snowblossom.lib.Globals;
 import snowblossom.node.PeerLink;
+import snowblossom.node.SnowBlossomNode;
+import snowblossom.proto.BlockHeader;
 
-
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Network  {
-  /** 
-   * Uncomment and implement as you see fit.  These operations will map
-   * Directly to operation calls from the routing logic.  Because the inflector
-   * Code allows you to implement logic incrementally, they are disabled.
-   **/
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+public class Network
+{
   
   public ResponseContext networkList(RequestContext request , JsonNode body ) 
     throws Exception
   {
     MetadataRequest req = new ObjectMapper().readValue(body.toString(), MetadataRequest.class);
 
-		LinkedList<NetworkIdentifier> lst = new LinkedList<>();
+    LinkedList<NetworkIdentifier> lst = new LinkedList<>();
 
     lst.add(new NetworkIdentifier().blockchain("snowblossom").network("mainnet"));
     lst.add(new NetworkIdentifier().blockchain("snowblossom").network("testnet"));
 
-		NetworkListResponse nlr = new NetworkListResponse().networkIdentifiers(lst);
-		return new ResponseContext().entity(nlr);
+    NetworkListResponse nlr = new NetworkListResponse().networkIdentifiers(lst);
+    return new ResponseContext().entity(nlr);
 
   }
 
@@ -52,64 +41,75 @@ import snowblossom.node.PeerLink;
     throws Exception
   {
     NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
+    
+    NetworkIdentifier id = req.getNetworkIdentifier();
 
-    return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+    NetworkOptionsResponse options = new NetworkOptionsResponse();
+
+    Version ver = new Version();
+    ver.setRosettaVersion("1.4.5");
+    ver.setNodeVersion( Globals.VERSION );
+    ver.setMiddlewareVersion( RoseSnow.VERSION );
+    options.setVersion(ver);
+
+    Allow allow = new Allow();
+
+
+    allow.setHistoricalBalanceLookup(true);
+    options.setAllow(allow);
+
+
+    return new ResponseContext().entity(options);
   }
 
-    public ResponseContext networkStatus(RequestContext request , JsonNode body )
-      throws Exception
+  public ResponseContext networkStatus(RequestContext request , JsonNode body )
+    throws Exception
+  {
+    NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
+
+    NetworkIdentifier id = req.getNetworkIdentifier();
+
+    SnowBlossomNode node = RoseSnow.getNode(id);
+
+    NetworkStatusResponse status = new NetworkStatusResponse();
+
+    SyncStatus sync = new SyncStatus();
+    sync.setStage("catch_up");
+
+    if (node.getBlockIngestor().getHead() != null)
     {
-      NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
+      BlockHeader head = node.getBlockIngestor().getHead().getHeader();
 
-      NetworkIdentifier id = req.getNetworkIdentifier();
+      ChainHash hash = new ChainHash( head.getSnowHash());
+      status.setCurrentBlockIdentifier( new BlockIdentifier()
+        .index((long)head.getBlockHeight())
+        .hash(hash.toString()));
+      status.setCurrentBlockTimestamp( head.getTimestamp() );
 
-      SnowBlossomNode node = RoseSnow.getNode(id);
-
-      NetworkStatusResponse status = new NetworkStatusResponse();
-
-      SyncStatus sync = new SyncStatus();
-      sync.setStage("catch_up");
-
-      if (node.getBlockIngestor().getHead() != null)
+      sync.setCurrentIndex( (long)head.getBlockHeight() );
+      sync.setTargetIndex( (long)node.getPeerage().getHighestSeenHeader().getBlockHeight() );
+      if (node.areWeSynced())
       {
-        BlockHeader head = node.getBlockIngestor().getHead().getHeader();
-
-        ChainHash hash = new ChainHash( head.getSnowHash());
-        status.setCurrentBlockIdentifier( new BlockIdentifier()
-          .index((long)head.getBlockHeight())
-          .hash(hash.toString()));
-        status.setCurrentBlockTimestamp( head.getTimestamp() );
-
-        sync.setCurrentIndex( (long)head.getBlockHeight() );
-        sync.setTargetIndex( (long)node.getPeerage().getHighestSeenHeader().getBlockHeight() );
-        if (node.areWeSynced())
-        {
-          sync.setStage("synced");
-        }
+        sync.setStage("synced");
       }
-
-      if (node.getDB().getBlockHashAtHeight(0) != null)
-      {
-        ChainHash hash = node.getDB().getBlockHashAtHeight(0);
-        BlockIdentifier gen = new BlockIdentifier().index(0L).hash(hash.toString());
-        status.setOldestBlockIdentifier(gen);
-        status.setGenesisBlockIdentifier(gen);
-
-      }
-      for(PeerLink link : node.getPeerage().getLinkList())
-      {
-        status.getPeers().add(new Peer().peerId( link.getLinkId() ) );
-      }
-
-
-
-      status.setSyncStatus(sync);
-
-
-
-
-      return new ResponseContext().entity(status);
     }
 
-}
+    if (node.getDB().getBlockHashAtHeight(0) != null)
+    {
+      ChainHash hash = node.getDB().getBlockHashAtHeight(0);
+      BlockIdentifier gen = new BlockIdentifier().index(0L).hash(hash.toString());
+      status.setOldestBlockIdentifier(gen);
+      status.setGenesisBlockIdentifier(gen);
 
+    }
+    for(PeerLink link : node.getPeerage().getLinkList())
+    {
+      status.getPeers().add(new Peer().peerId( link.getLinkId() ) );
+    }
+
+    status.setSyncStatus(sync);
+
+    return new ResponseContext().entity(status);
+  }
+
+}

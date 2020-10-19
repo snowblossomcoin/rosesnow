@@ -18,6 +18,9 @@ import snowblossom.lib.LogSetup;
 public class RoseSnow
 {
 
+  public static final String VERSION="0.1";
+
+
   private static HashMap<NetworkIdentifier, SnowBlossomNode> node_map = new HashMap<>();
 
   /**
