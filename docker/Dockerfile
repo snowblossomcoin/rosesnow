@@ -29,9 +29,16 @@ RUN chown -R snowblossom:snowblossom /home/snowblossom
 
 USER snowblossom
 WORKDIR /home/snowblossom
-RUN git clone https://github.com/snowblossomcoin/rosesnow.git -b v0.1 rosesnow.git
+RUN mkdir /home/snowblossom/rosesnow
 
 WORKDIR /home/snowblossom/rosesnow
+ARG REFSPEC=v0.1
+RUN git init . \
+  && git remote add origin https://github.com/snowblossomcoin/rosesnow.git \
+  && git fetch origin ${REFSPEC} \
+  && git checkout FETCH_HEAD \
+  && rm -rf .git/
+
 RUN bazel build :RoseSnow_deploy.jar
 
 WORKDIR /home/snowblossom/rosesnow/maven
@@ -43,4 +50,3 @@ RUN mvn package
 CMD mvn jetty:run
 # Run with:
 #  docker run -p 8080:8080/tcp
-
