@@ -16,7 +16,9 @@ RUN apt-get update -qq \
     git \
     default-jdk-headless \
     bazel \
-    maven
+    maven \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /var/build/snow
 WORKDIR /var/build/snowblossom
