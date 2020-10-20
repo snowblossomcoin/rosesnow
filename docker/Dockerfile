@@ -14,7 +14,7 @@ RUN curl -Ls https://bazel.build/bazel-release.pub.gpg | apt-key add -
 RUN apt-get update -qq \
   && apt-get install -qq --no-install-recommends --no-install-suggests \
     git \
-    default-jdk \
+    default-jdk-headless \
     bazel \
     maven
 
