@@ -16,17 +16,64 @@ import io.swagger.model.BlockTransactionRequest;
 import io.swagger.model.BlockTransactionResponse;
 import io.swagger.model.Error;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Block  {
-  /** 
-   * Uncomment and implement as you see fit.  These operations will map
-   * Directly to operation calls from the routing logic.  Because the inflector
-   * Code allows you to implement logic incrementally, they are disabled.
-   **/
+import org.snowblossom.rosesnow.RoseSnow;
+import org.snowblossom.rosesnow.RoseUtil;
+import snowblossom.lib.ChainHash;
+import snowblossom.lib.Globals;
+import snowblossom.node.SnowBlossomNode;
+import snowblossom.proto.BlockHeader;
 
-    public ResponseContext block(RequestContext request , JsonNode body 
-) {
-        return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+public class Block
+{
+    public ResponseContext block(RequestContext request , JsonNode body) 
+      throws Exception
+    {
+      BlockRequest req = new ObjectMapper().readValue(body.toString(), BlockRequest.class);
+
+      NetworkIdentifier id = req.getNetworkIdentifier();
+      SnowBlossomNode node = RoseSnow.getNode(id);
+
+      PartialBlockIdentifier pbi = req.getBlockIdentifier();
+
+      ChainHash block_hash = null;
+      if (pbi.getHash() != null) block_hash = new ChainHash(pbi.getHash());
+      else
+      {
+        block_hash = node.getDB().getBlockHashAtHeight(pbi.getIndex().intValue());
+      }
+
+      BlockResponse resp = new BlockResponse();
+
+      snowblossom.proto.Block blk = node.getDB().getBlockMap().get(block_hash.getBytes());
+      
+      io.swagger.model.Block b = new io.swagger.model.Block();
+
+      
+
+      b.setBlockIdentifier( new BlockIdentifier()
+        .index( (long) blk.getHeader().getBlockHeight() )
+        .hash( new ChainHash(blk.getHeader().getSnowHash()).toString() ));
+      if (blk.getHeader().getBlockHeight() > 0)
+      {
+        b.setParentBlockIdentifier( new BlockIdentifier()
+          .index( (long) blk.getHeader().getBlockHeight()-1 )
+          .hash( new ChainHash(blk.getHeader().getPrevBlockHash()).toString() ));
+      }
+      b.setTimestamp( blk.getHeader().getTimestamp() );
+
+      for( snowblossom.proto.Transaction s_tx : blk.getTransactionsList() )
+      {
+        b.getTransactions().add( RoseUtil.protoToModel(s_tx));
+      }
+
+
+      resp.setBlock(b);
+
+      return new ResponseContext().entity(resp);
     }
 
     public ResponseContext blockTransaction(RequestContext request , JsonNode body ) {

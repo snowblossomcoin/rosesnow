@@ -54,7 +54,11 @@ public class Network
 
     Allow allow = new Allow();
 
+    allow.getOperationTypes().add("SPEND");
+    allow.getOperationTypes().add("RECEIVE");
 
+    allow.getOperationStatuses().add(new OperationStatus().status("CONFIRMED").successful(true));
+    allow.getOperationStatuses().add(new OperationStatus().status("PENDING").successful(true));
     allow.setHistoricalBalanceLookup(true);
     options.setAllow(allow);
 
@@ -87,7 +91,10 @@ public class Network
       status.setCurrentBlockTimestamp( head.getTimestamp() );
 
       sync.setCurrentIndex( (long)head.getBlockHeight() );
-      sync.setTargetIndex( (long)node.getPeerage().getHighestSeenHeader().getBlockHeight() );
+      if (node.getPeerage().getHighestSeenHeader() != null)
+      {
+        sync.setTargetIndex( (long)node.getPeerage().getHighestSeenHeader().getBlockHeight() );
+      }
       if (node.areWeSynced())
       {
         sync.setStage("synced");
