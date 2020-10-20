@@ -5,7 +5,7 @@ ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true
 RUN apt-get update
 RUN apt-get install --yes curl gpg git apt-utils default-jdk maven
 RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" > /etc/apt/sources.list.d/snowblossom-bazel.list
-RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
+RUN curl -Ls https://bazel.build/bazel-release.pub.gpg | apt-key add -
 
 RUN apt-get update
 RUN apt-get install --yes bazel
