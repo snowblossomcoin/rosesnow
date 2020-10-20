@@ -3,12 +3,19 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true
 RUN apt-get update -qq
-RUN apt-get install -qq apt-utils gpg curl
+RUN apt-get install -qq \
+  apt-utils \
+  gpg \
+  curl
 RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" > /etc/apt/sources.list.d/snowblossom-bazel.list
 RUN curl -Ls https://bazel.build/bazel-release.pub.gpg | apt-key add -
 
 RUN apt-get update -qq
-RUN apt-get install -qq git default-jdk bazel maven
+RUN apt-get install -qq \
+  git \
+  default-jdk \
+  bazel \
+  maven
 
 RUN mkdir -p /var/build/snow
 WORKDIR /var/build/snowblossom
