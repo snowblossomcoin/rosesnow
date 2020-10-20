@@ -24,15 +24,17 @@ RUN apt-get update -qq \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /var/build/snow
-WORKDIR /var/build/snowblossom
+RUN useradd -ms /bin/bash snowblossom
+RUN chown -R snowblossom:snowblossom /home/snowblossom
 
+USER snowblossom
+WORKDIR /home/snowblossom
 RUN git clone https://github.com/snowblossomcoin/rosesnow.git -b v0.1 rosesnow.git
 
-WORKDIR /var/build/snowblossom/rosesnow.git
+WORKDIR /home/snowblossom/rosesnow
 RUN bazel build :RoseSnow_deploy.jar
 
-WORKDIR /var/build/snowblossom/rosesnow.git/maven
+WORKDIR /home/snowblossom/rosesnow/maven
 
 EXPOSE 8080/tcp
 
