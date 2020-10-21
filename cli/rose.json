@@ -1,0 +1,10 @@
+{
+  "online_url": "http://localhost:8080",
+ 	"network": {
+  	"blockchain": "snowblossom",
+  	"network": "mainnet"
+ 	},
+  "data_directory": "/data",
+  "http_timeout": 120,
+  "max_sync_concurrency": 16
+}
