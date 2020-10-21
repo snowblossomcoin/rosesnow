@@ -16,21 +16,56 @@ import io.swagger.model.MempoolTransactionRequest;
 import io.swagger.model.MempoolTransactionResponse;
 import io.swagger.model.NetworkRequest;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.snowblossom.rosesnow.RoseSnow;
+import org.snowblossom.rosesnow.RoseUtil;
+import snowblossom.lib.ChainHash;
+import snowblossom.lib.Globals;
+import snowblossom.node.PeerLink;
+import snowblossom.node.SnowBlossomNode;
+import snowblossom.proto.BlockHeader;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")public class Mempool {
-  /** 
-   * Uncomment and implement as you see fit.  These operations will map
-   * Directly to operation calls from the routing logic.  Because the inflector
-   * Code allows you to implement logic incrementally, they are disabled.
-   **/
 
-    public ResponseContext mempool(RequestContext request , JsonNode body) {
-        return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+
+public class Mempool {
+
+  public ResponseContext mempool(RequestContext request , JsonNode body)
+    throws Exception
+  {
+    NetworkRequest req = new ObjectMapper().readValue(body.toString(), NetworkRequest.class);
+    NetworkIdentifier id = req.getNetworkIdentifier();
+    SnowBlossomNode node = RoseSnow.getNode(id);
+
+    MempoolResponse resp = new MempoolResponse();
+
+    for(ChainHash hash : node.getMemPool().getPoolHashList())
+    {
+      resp.getTransactionIdentifiers().add( new TransactionIdentifier().hash( hash.toString() ));
     }
 
-    public ResponseContext mempoolTransaction(RequestContext request , JsonNode body) {
-        return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+    return new ResponseContext().entity(resp );
+  }
+
+  public ResponseContext mempoolTransaction(RequestContext request , JsonNode body) 
+    throws Exception
+  {
+    MempoolTransactionRequest req = new ObjectMapper().readValue(body.toString(), MempoolTransactionRequest.class);
+    NetworkIdentifier id = req.getNetworkIdentifier();
+    SnowBlossomNode node = RoseSnow.getNode(id);
+
+    ChainHash tx_id = new ChainHash(req.getTransactionIdentifier().getHash());
+    
+    MempoolTransactionResponse resp = new MempoolTransactionResponse();
+
+    snowblossom.proto.Transaction s_tx = node.getMemPool().getTransaction(tx_id);
+    if (s_tx != null)
+    {
+      resp.setTransaction( RoseUtil.protoToModel(s_tx, node));
     }
+
+    return new ResponseContext().entity(resp);
+  }
 
 }
 

@@ -12,11 +12,12 @@ import snowblossom.lib.db.DB;
 import snowblossom.lib.ChainHash;
 import snowblossom.lib.AddressSpecHash;
 import snowblossom.lib.NetworkParams;
+import snowblossom.node.SnowBlossomNode;
 
 public class RoseUtil
 {
 
-  public static Transaction protoToModel( snowblossom.proto.Transaction s_tx, DB snow_db, NetworkParams params)
+  public static Transaction protoToModel( snowblossom.proto.Transaction s_tx, SnowBlossomNode node)
   {
     Transaction tx = new Transaction();
     ChainHash tx_id = new ChainHash(s_tx.getTxHash());
@@ -37,15 +38,19 @@ public class RoseUtil
       ChainHash src_tx_id = new ChainHash(tx_in.getSrcTxId());
       int src_idx = tx_in.getSrcTxOutIdx();
 
-      o.setAccount( new AccountIdentifier().address( spec_hash.toAddressString(params) ));
+      o.setAccount( new AccountIdentifier().address( spec_hash.toAddressString(node.getParams()) ));
 
-      snowblossom.proto.Transaction src_tx = snow_db.getTransactionMap().get(src_tx_id.getBytes());
+      snowblossom.proto.Transaction src_tx = node.getDB().getTransactionMap().get(src_tx_id.getBytes());
+      if (src_tx == null)
+      {
+        src_tx = node.getMemPool().getTransaction(src_tx_id);
+      }
       TransactionInner src_tx_inner = TransactionUtil.getInner(src_tx);
 
       long value = src_tx_inner.getOutputs(src_idx).getValue();
 
       // Question, should spent amounts be negative?  Probably
-      o.setAmount( getSnowAmount(-value, params) );
+      o.setAmount( getSnowAmount(-value, node.getParams()) );
 
       o.setCoinChange(  
         new CoinChange()
@@ -67,8 +72,8 @@ public class RoseUtil
 
       long value = tx_out.getValue();
       AddressSpecHash spec_hash = new AddressSpecHash( tx_out.getRecipientSpecHash() );
-      o.setAmount( getSnowAmount(value, params) );
-      o.setAccount( new AccountIdentifier().address( spec_hash.toAddressString(params) ));
+      o.setAmount( getSnowAmount(value, node.getParams()) );
+      o.setAccount( new AccountIdentifier().address( spec_hash.toAddressString(node.getParams()) ));
 
       o.setCoinChange(  
         new CoinChange()
