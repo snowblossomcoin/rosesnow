@@ -1,4 +1,4 @@
-curl -d '{"network_identifier": {"blockchain":"snowblossom","network":"mainnet"}, "block_identifier":{"index":10} }' -H "Content-Type: application/json" http://localhost:8080/block/ | jq .
+curl -d '{"network_identifier": {"blockchain":"snowblossom","network":"mainnet"}, "block_identifier":{"index":129142} }' -H "Content-Type: application/json" http://localhost:8080/block/ | jq .
 
 echo ""
 

@@ -10,6 +10,9 @@ import duckutil.ConfigMem;
 import java.util.TreeMap;
 import snowblossom.lib.Globals;
 import snowblossom.lib.LogSetup;
+import snowblossom.client.StubHolder;
+import snowblossom.client.StubUtil;
+import snowblossom.lib.NetworkParams;
 
 import java.util.Enumeration;
 import java.util.Properties;
@@ -17,7 +20,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-
 
 
 /**
@@ -31,6 +33,8 @@ public class RoseSnow
 
 
   private static HashMap<NetworkIdentifier, SnowBlossomNode> node_map = new HashMap<>();
+  private static HashMap<NetworkIdentifier, StubHolder> client_map = new HashMap<>();
+
 
   /**
    * @param id Identifier of network
@@ -69,7 +73,15 @@ public class RoseSnow
       cm.put("addr_index", "true");
       cm.put("db_path", getBaseDbPath() +"/" + network);
 
+
       ConfigMem config = new ConfigMem(cm);
+
+      NetworkParams params = NetworkParams.loadFromConfig(config);
+      int port = params.getDefaultPort()*3;
+
+      cm.put("service_port", ""+port);
+
+      config = new ConfigMem(cm);
 
       LogSetup.setup(config);
       LogSetup.fixLevels();
@@ -78,8 +90,22 @@ public class RoseSnow
 
       node_map.put(id, node);
 
+      StubHolder stub_holder = new StubHolder( StubUtil.openChannel("grpc://localhost:" + port, params));
+      client_map.put(id, stub_holder);
+
       return node;
 
+    }
+
+  }
+
+  public static StubHolder getClient(NetworkIdentifier id)
+    throws Exception
+  {
+    getNode(id, true);
+    synchronized(node_map)
+    {
+      return client_map.get(id);
     }
 
   }

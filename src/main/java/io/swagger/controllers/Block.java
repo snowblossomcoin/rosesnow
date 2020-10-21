@@ -52,22 +52,28 @@ public class Block
       
       io.swagger.model.Block b = new io.swagger.model.Block();
 
-      
-
       b.setBlockIdentifier( new BlockIdentifier()
         .index( (long) blk.getHeader().getBlockHeight() )
         .hash( new ChainHash(blk.getHeader().getSnowHash()).toString() ));
-      if (blk.getHeader().getBlockHeight() > 0)
+
+      if (blk.getHeader().getBlockHeight() == 0)
       {
+        b.setParentBlockIdentifier( b.getBlockIdentifier());
+
+      }
+      else
+      {
+        long p = (long) blk.getHeader().getBlockHeight()-1;
+
         b.setParentBlockIdentifier( new BlockIdentifier()
-          .index( (long) blk.getHeader().getBlockHeight()-1 )
+          .index( p )
           .hash( new ChainHash(blk.getHeader().getPrevBlockHash()).toString() ));
       }
       b.setTimestamp( blk.getHeader().getTimestamp() );
 
       for( snowblossom.proto.Transaction s_tx : blk.getTransactionsList() )
       {
-        b.getTransactions().add( RoseUtil.protoToModel(s_tx));
+        b.getTransactions().add( RoseUtil.protoToModel(s_tx, node.getDB(), node.getParams()) );
       }
 
 
@@ -76,9 +82,27 @@ public class Block
       return new ResponseContext().entity(resp);
     }
 
-    public ResponseContext blockTransaction(RequestContext request , JsonNode body ) {
-        return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
-    }
+  public ResponseContext blockTransaction(RequestContext request , JsonNode body )
+    throws Exception
+  {
+    BlockTransactionRequest req = new ObjectMapper().readValue(body.toString(), BlockTransactionRequest.class);
+
+    NetworkIdentifier id = req.getNetworkIdentifier();
+    BlockIdentifier bi = req.getBlockIdentifier();
+    TransactionIdentifier ti = req.getTransactionIdentifier();
+
+    SnowBlossomNode node = RoseSnow.getNode(id);
+
+    ChainHash tx_id = new ChainHash(ti.getHash());
+
+    snowblossom.proto.Transaction s_tx = node.getDB().getTransactionMap().get(tx_id.getBytes());
+
+    BlockTransactionResponse resp = new BlockTransactionResponse();
+
+    resp.setTransaction( RoseUtil.protoToModel(s_tx, node.getDB(), node.getParams()) );
+
+    return new ResponseContext().entity( resp );
+  }
 
 }
 

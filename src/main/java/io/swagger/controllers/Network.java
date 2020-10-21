@@ -57,6 +57,7 @@ public class Network
     allow.getOperationTypes().add("SPEND");
     allow.getOperationTypes().add("RECEIVE");
 
+    allow.getOperationStatuses().add(new OperationStatus().status("OK").successful(true));
     allow.getOperationStatuses().add(new OperationStatus().status("CONFIRMED").successful(true));
     allow.getOperationStatuses().add(new OperationStatus().status("PENDING").successful(true));
     allow.setHistoricalBalanceLookup(true);
