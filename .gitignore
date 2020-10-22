@@ -2,4 +2,5 @@ bazel-bin
 bazel-out
 bazel-testlogs
 maven/target
+maven/local-maven-repo/rosesnow/base/1.0/base-1.0.jar
 
