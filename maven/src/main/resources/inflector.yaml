@@ -1,0 +1,72 @@
+controllerPackage: io.swagger.controllers
+modelPackage:  io.swagger.model
+swaggerUrl: ./src/main/resources/openapi.yaml
+modelMappings:
+  # to enable explicit mappings, use this syntax:
+  DefinitionFromSwaggerSpecification: fully.qualified.path.to.Model
+  AccountBalanceRequest : io.swagger.model.AccountBalanceRequest
+AccountBalanceResponse : io.swagger.model.AccountBalanceResponse
+AccountIdentifier : io.swagger.model.AccountIdentifier
+Allow : io.swagger.model.Allow
+Amount : io.swagger.model.Amount
+BalanceExemption : io.swagger.model.BalanceExemption
+Block : io.swagger.model.Block
+BlockIdentifier : io.swagger.model.BlockIdentifier
+BlockRequest : io.swagger.model.BlockRequest
+BlockResponse : io.swagger.model.BlockResponse
+BlockTransactionRequest : io.swagger.model.BlockTransactionRequest
+BlockTransactionResponse : io.swagger.model.BlockTransactionResponse
+CallRequest : io.swagger.model.CallRequest
+CallResponse : io.swagger.model.CallResponse
+Coin : io.swagger.model.Coin
+CoinAction : io.swagger.model.CoinAction
+CoinChange : io.swagger.model.CoinChange
+CoinIdentifier : io.swagger.model.CoinIdentifier
+ConstructionCombineRequest : io.swagger.model.ConstructionCombineRequest
+ConstructionCombineResponse : io.swagger.model.ConstructionCombineResponse
+ConstructionDeriveRequest : io.swagger.model.ConstructionDeriveRequest
+ConstructionDeriveResponse : io.swagger.model.ConstructionDeriveResponse
+ConstructionHashRequest : io.swagger.model.ConstructionHashRequest
+ConstructionMetadataRequest : io.swagger.model.ConstructionMetadataRequest
+ConstructionMetadataResponse : io.swagger.model.ConstructionMetadataResponse
+ConstructionParseRequest : io.swagger.model.ConstructionParseRequest
+ConstructionParseResponse : io.swagger.model.ConstructionParseResponse
+ConstructionPayloadsRequest : io.swagger.model.ConstructionPayloadsRequest
+ConstructionPayloadsResponse : io.swagger.model.ConstructionPayloadsResponse
+ConstructionPreprocessRequest : io.swagger.model.ConstructionPreprocessRequest
+ConstructionPreprocessResponse : io.swagger.model.ConstructionPreprocessResponse
+ConstructionSubmitRequest : io.swagger.model.ConstructionSubmitRequest
+Currency : io.swagger.model.Currency
+CurveType : io.swagger.model.CurveType
+Error : io.swagger.model.Error
+ExemptionType : io.swagger.model.ExemptionType
+MempoolResponse : io.swagger.model.MempoolResponse
+MempoolTransactionRequest : io.swagger.model.MempoolTransactionRequest
+MempoolTransactionResponse : io.swagger.model.MempoolTransactionResponse
+MetadataRequest : io.swagger.model.MetadataRequest
+NetworkIdentifier : io.swagger.model.NetworkIdentifier
+NetworkListResponse : io.swagger.model.NetworkListResponse
+NetworkOptionsResponse : io.swagger.model.NetworkOptionsResponse
+NetworkRequest : io.swagger.model.NetworkRequest
+NetworkStatusResponse : io.swagger.model.NetworkStatusResponse
+Operation : io.swagger.model.Operation
+OperationIdentifier : io.swagger.model.OperationIdentifier
+OperationStatus : io.swagger.model.OperationStatus
+PartialBlockIdentifier : io.swagger.model.PartialBlockIdentifier
+Peer : io.swagger.model.Peer
+PublicKey : io.swagger.model.PublicKey
+Signature : io.swagger.model.Signature
+SignatureType : io.swagger.model.SignatureType
+SigningPayload : io.swagger.model.SigningPayload
+SubAccountIdentifier : io.swagger.model.SubAccountIdentifier
+SubNetworkIdentifier : io.swagger.model.SubNetworkIdentifier
+SyncStatus : io.swagger.model.SyncStatus
+Transaction : io.swagger.model.Transaction
+TransactionIdentifier : io.swagger.model.TransactionIdentifier
+TransactionIdentifierResponse : io.swagger.model.TransactionIdentifierResponse
+Version : io.swagger.model.Version
+
+entityProcessors:
+  - json
+  - xml
+  - yaml
