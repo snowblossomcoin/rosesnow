@@ -84,7 +84,7 @@
                 <configuration>
                     <monitoredDirName>.</monitoredDirName>
                     <scanTargets>
-                        <scanTarget>inflector.yaml</scanTarget>
+                        <scanTarget>src/main/resources/inflector.yaml</scanTarget>
                         <scanTarget>src/main/resources/openapi.yaml</scanTarget>
                     </scanTargets>
                     <scanIntervalSeconds>120</scanIntervalSeconds>
