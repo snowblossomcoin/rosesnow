@@ -105,8 +105,14 @@
             <groupId>io.swagger</groupId>
             <artifactId>swagger-inflector</artifactId>
             <version>${swagger-inflector-version}</version>
-        </dependency>
-        <dependency>
+          </dependency>
+          <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.32</version>
+            <scope>runtime</scope>
+          </dependency>
+          <dependency>
             <groupId>rosesnow</groupId>
             <artifactId>sample</artifactId>
             <version>1.0</version>
