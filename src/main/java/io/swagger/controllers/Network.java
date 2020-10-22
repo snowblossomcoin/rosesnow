@@ -54,8 +54,8 @@ public class Network
 
     Allow allow = new Allow();
 
-    allow.getOperationTypes().add("SPEND");
-    allow.getOperationTypes().add("RECEIVE");
+    allow.getOperationTypes().add("INPUT");
+    allow.getOperationTypes().add("OUTPUT");
 
     allow.getOperationStatuses().add(new OperationStatus().status("OK").successful(true));
     allow.getOperationStatuses().add(new OperationStatus().status("CONFIRMED").successful(true));

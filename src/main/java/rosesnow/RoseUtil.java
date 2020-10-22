@@ -1,18 +1,24 @@
 package org.snowblossom.rosesnow;
 
+import duckutil.ConfigMem;
 import io.swagger.model.*;
+import io.swagger.model.NetworkIdentifier;
+import java.util.TreeMap;
+import snowblossom.lib.AddressSpecHash;
 import snowblossom.lib.ChainHash;
+import snowblossom.lib.NetworkParams;
 import snowblossom.lib.TransactionUtil;
-
+import snowblossom.node.SnowBlossomNode;
 import snowblossom.proto.TransactionInner;
 import snowblossom.proto.TransactionInput;
 import snowblossom.proto.TransactionOutput;
-
-import snowblossom.lib.db.DB;
-import snowblossom.lib.ChainHash;
-import snowblossom.lib.AddressSpecHash;
-import snowblossom.lib.NetworkParams;
-import snowblossom.node.SnowBlossomNode;
+import snowblossom.lib.HexUtil;
+import snowblossom.lib.AddressUtil;
+import snowblossom.lib.SignatureUtil;
+import snowblossom.proto.AddressSpec;
+import snowblossom.proto.SigSpec;
+import snowblossom.lib.ValidationException;
+import com.google.protobuf.ByteString;
 
 public class RoseUtil
 {
@@ -31,7 +37,7 @@ public class RoseUtil
     {
       Operation o = new Operation();
       o.setOperationIdentifier( new OperationIdentifier().index(tx_idx) );
-      o.setType("SPEND");
+      o.setType("INPUT");
       o.setStatus("OK");
 
       AddressSpecHash spec_hash = new AddressSpecHash(tx_in.getSpecHash());
@@ -67,7 +73,7 @@ public class RoseUtil
     {
       Operation o = new Operation();
       o.setOperationIdentifier( new OperationIdentifier().index(tx_idx) );
-      o.setType("RECEIVE");
+      o.setType("OUTPUT");
       o.setStatus("OK");
 
       long value = tx_out.getValue();
@@ -97,4 +103,52 @@ public class RoseUtil
     return new Amount().value("" + value).currency(c);
   }
 
+  public static NetworkParams getParams(NetworkIdentifier id)
+  {
+    TreeMap<String, String> cm = new TreeMap<>();
+    cm.put("network", id.getNetwork());
+    ConfigMem config = new ConfigMem(cm);
+    return NetworkParams.loadFromConfig(config);
+
+  }
+
+  public static AddressSpec getSpecForPublicKey(PublicKey pk)
+    throws ValidationException
+  {
+    if (!CurveType.SECP256K1.equals(pk.getCurveType()))
+    {
+      throw new ValidationException("Unexpected curve type: " + pk.getCurveType());
+    }
+    String hex_str = pk.getHexBytes();
+    ByteString hex = HexUtil.hexStringToBytes(hex_str);
+
+    return AddressUtil.getSimpleSpecForKey(hex, SignatureUtil.SIG_TYPE_ECDSA_COMPRESSED);
+  }
+
+  public static AddressSpecHash getSpecHashForPublicKey(PublicKey pk)
+    throws ValidationException
+  {
+    return AddressUtil.getHashForSpec(getSpecForPublicKey(pk));
+  }
+
+  public static void checkSignature(Signature sig)
+    throws ValidationException
+  {
+    AddressSpec spec = getSpecForPublicKey(sig.getPublicKey());
+    SigSpec sig_spec = spec.getSigSpecs(0);
+
+    ByteString sig_data = HexUtil.hexStringToBytes( sig.getHexBytes() );
+    ByteString data = HexUtil.hexStringToBytes( sig.getSigningPayload().getHexBytes() );
+
+    // TODO - remove
+    System.out.println("LORK Signature data: " + sig.getHexBytes());
+    System.out.println("LORK Signed data: " + sig.getSigningPayload().getHexBytes());
+
+
+    if(!SignatureUtil.checkSignature(sig_spec, data, sig_data))
+    {
+      throw new ValidationException("Signature check failed");
+    }
+
+  }
 }

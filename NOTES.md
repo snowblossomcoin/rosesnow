@@ -5,12 +5,12 @@ I think everything works
 
 ## Construction API
 
-* /construct/preprocess <-- nothing as far as I can tell
+* /construct/preprocess -- provide list add addresses we need pub keys for
 
-* /construction/metadata 
-  public keys to spendable coins
+* /construction/metadata -- nothing
 
 * /construction/payloads
+  takes operations, pub keys, returns things to sign
   coins and operations to unsigned tx via signing payloads
 
 * /construction/parse
@@ -18,7 +18,6 @@ I think everything works
 
 * /construction/combine
   signed payloads to complete tx
-
 
 * /construction/hash
 

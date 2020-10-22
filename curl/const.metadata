@@ -1,0 +1,4 @@
+curl -d '{"network_identifier": {"blockchain":"snowblossom","network":"mainnet"}}' -H "Content-Type: application/json" http://localhost:8080/construction/metadata | jq .
+
+echo ""
+
