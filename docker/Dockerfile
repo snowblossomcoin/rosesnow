@@ -33,13 +33,14 @@ RUN mkdir /home/snowblossom/rosesnow
 
 WORKDIR /home/snowblossom/rosesnow
 ARG REFSPEC=v0.2
-RUN git init . \
+RUN echo cor && git init . \
   && git remote add origin https://github.com/snowblossomcoin/rosesnow.git \
   && git fetch origin ${REFSPEC} \
   && git checkout FETCH_HEAD \
   && rm -rf .git/
 
 RUN bazel build :RoseSnow_deploy.jar
+RUN cp bazel-bin/RoseSnow_deploy.jar maven/local-maven-repo/rosesnow/base/1.0/base-1.0.jar
 
 WORKDIR /home/snowblossom/rosesnow/maven
 RUN mvn package

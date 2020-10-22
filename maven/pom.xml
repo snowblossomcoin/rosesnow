@@ -114,10 +114,9 @@
           </dependency>
           <dependency>
             <groupId>rosesnow</groupId>
-            <artifactId>sample</artifactId>
+            <artifactId>base</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/../bazel-bin/RoseSnow_deploy.jar</systemPath>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -132,6 +131,10 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+          <id>local-maven-repo</id>
+          <url>file:///${project.basedir}/local-maven-repo</url>
         </repository>
     </repositories>
     <properties>
