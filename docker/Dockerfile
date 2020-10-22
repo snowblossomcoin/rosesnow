@@ -1,29 +1,72 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 as build
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update
-RUN apt-get install --yes curl gpg git apt-utils default-jdk maven
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" > /etc/apt/sources.list.d/snowblossom-bazel.list
-RUN curl https://bazel.build/bazel-release.pub.gpg | apt-key add -
+ARG DEBIAN_FRONTEND=noninteractive
+ARG APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true
 
-RUN apt-get update
-RUN apt-get install --yes bazel
+RUN apt-get update -qq \
+  && apt-get install -qq --no-install-recommends --no-install-suggests \
+    apt-utils \
+    gpg \
+    gpg-agent \
+    ca-certificates \
+    curl
 
-RUN mkdir -p /var/build/snow
-WORKDIR /var/build/snowblossom
+RUN echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" \
+  > /etc/apt/sources.list.d/snowblossom-bazel.list
+RUN curl -Ls https://bazel.build/bazel-release.pub.gpg | apt-key add -
 
-RUN git clone https://github.com/snowblossomcoin/rosesnow.git -b v0.1 rosesnow.git
+RUN apt-get update -qq \
+  && apt-get install -qq --no-install-recommends --no-install-suggests \
+    git \
+    default-jdk-headless \
+    bazel \
+    maven \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /var/build/snowblossom/rosesnow.git
+RUN useradd -ms /bin/bash snowblossom
+RUN chown -R snowblossom:snowblossom /home/snowblossom
+
+USER snowblossom
+WORKDIR /home/snowblossom
+RUN mkdir /home/snowblossom/rosesnow
+
+WORKDIR /home/snowblossom/rosesnow
+ARG REFSPEC=v0.1
+RUN git init . \
+  && git remote add origin https://github.com/snowblossomcoin/rosesnow.git \
+  && git fetch origin ${REFSPEC} \
+  && git checkout FETCH_HEAD \
+  && rm -rf .git/
+
 RUN bazel build :RoseSnow_deploy.jar
 
-WORKDIR /var/build/snowblossom/rosesnow.git/maven
-
-EXPOSE 8080/tcp
-
+WORKDIR /home/snowblossom/rosesnow/maven
 RUN mvn package
 
-CMD mvn jetty:run
-# Run with:
-#  docker run -p 8080:8080/tcp
+FROM ubuntu:20.04 as runtime
 
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -qq \
+  && apt-get install -qq --no-install-recommends --no-install-suggests \
+    jetty9 \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN rm -rf /var/lib/jetty9/webapps/root/
+COPY --from=build /home/snowblossom/rosesnow/maven/target/snowrosetta-rosesnow.war \
+  /var/lib/jetty9/webapps/ROOT.war
+
+RUN chown -R jetty:adm /var/lib/jetty9/
+USER jetty
+
+ENV JETTY_HOME=/usr/share/jetty9/
+ENV JETTY_STATE=/var/lib/jetty9/jetty.state
+ENV JAVA_OPTS=-Djava.awt.headless=true
+
+CMD /usr/share/jetty9/bin/jetty.sh run
+
+# To build and run any branch or tag:
+# docker build --build-arg REFSPEC=main -t rosesnow-rosetta .
+# docker run -it --rm -p 8080:8080/tcp rosesnow-rosetta
