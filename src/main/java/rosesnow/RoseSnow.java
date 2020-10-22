@@ -20,6 +20,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.io.File;
 
 
 /**
@@ -72,6 +73,8 @@ public class RoseSnow
       cm.put("tx_index", "true");
       cm.put("addr_index", "true");
       cm.put("db_path", getBaseDbPath() +"/" + network);
+
+      new File(getBaseDbPath() +"/" + network).mkdirs();
 
 
       ConfigMem config = new ConfigMem(cm);
