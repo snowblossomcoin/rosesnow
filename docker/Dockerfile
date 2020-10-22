@@ -33,7 +33,7 @@ RUN mkdir /home/snowblossom/rosesnow
 
 WORKDIR /home/snowblossom/rosesnow
 ARG REFSPEC=v0.2
-RUN echo cor && git init . \
+RUN git init . \
   && git remote add origin https://github.com/snowblossomcoin/rosesnow.git \
   && git fetch origin ${REFSPEC} \
   && git checkout FETCH_HEAD \
@@ -70,4 +70,7 @@ CMD /usr/share/jetty9/bin/jetty.sh run
 
 # To build and run any branch or tag:
 # docker build --build-arg REFSPEC=main -t rosesnow-rosetta .
+# or
+# docker build --build-arg REFSPEC=$(git rev-parse HEAD) -t rosesnow-rosetta .
+#
 # docker run -it --rm -p 8080:8080/tcp rosesnow-rosetta
