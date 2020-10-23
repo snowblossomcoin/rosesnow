@@ -60,17 +60,21 @@ COPY --from=build /home/snowblossom/rosesnow/maven/target/snowrosetta-rosesnow.w
   /var/lib/jetty9/webapps/ROOT.war
 
 RUN chown -R jetty:adm /var/lib/jetty9/
+RUN mkdir -p /data/snowblossom
+RUN chown -R jetty /data/snowblossom
+
 USER jetty
 
 ENV JETTY_HOME=/usr/share/jetty9/
 ENV JETTY_STATE=/var/lib/jetty9/jetty.state
 ENV JAVA_OPTS=-Djava.awt.headless=true
 
+
 CMD /usr/share/jetty9/bin/jetty.sh run
 
 # To build and run any branch or tag:
-# docker build --build-arg REFSPEC=main -t rosesnow-rosetta .
+# docker build --build-arg REFSPEC=main -t rosesnow-rosetta:dev .
 # or
-# docker build --build-arg REFSPEC=$(git rev-parse HEAD) -t rosesnow-rosetta .
+# docker build --build-arg REFSPEC=$(git rev-parse HEAD) -t rosesnow-rosetta:dev .
 #
-# docker run -it --rm -p 8080:8080/tcp rosesnow-rosetta
+# docker run -it --rm -p 8080:8080/tcp --network host rosesnow-rosetta:dev
