@@ -30,20 +30,35 @@ java_library(
   ],
 )
 
+# Doesn't create a real runnable binary
+# just used to make a single jar file for
+# inclusion in maven
 java_binary(
   name = "RoseSnow",
   main_class = "org.snowblossom.RoseSnow",
   runtime_deps = [
+		":rosesnowlib",
+  ],
+)
+
+java_library(
+  name = "rosesnowtestlib",
+  srcs = glob(["test/**/*.java", "test/*.java"]),
+  deps = [
     ":rosesnowlib",
+    "@snowblossom//lib",
+    "@snowblossom//protolib:protogrpc",
+    "@maven//:com_fasterxml_jackson_core_jackson_databind",
+    "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+    "@maven//:junit_junit",
   ],
 )
 
 java_binary(
-  name = "JettyRun",
-  main_class = "org.eclipse.jetty.runner.Runner",
+  name = "TestConstructionE2E",
+  main_class = "org.snowblossom.rosesnow.test.ConstructionE2E",
   runtime_deps = [
-    "@maven//:org_eclipse_jetty_jetty_runner"
+    ":rosesnowtestlib",
   ],
 )
-
 

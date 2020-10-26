@@ -19,6 +19,8 @@ import snowblossom.proto.AddressSpec;
 import snowblossom.proto.SigSpec;
 import snowblossom.lib.ValidationException;
 import com.google.protobuf.ByteString;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 public class RoseUtil
 {
@@ -120,6 +122,8 @@ public class RoseUtil
       throw new ValidationException("Unexpected curve type: " + pk.getCurveType());
     }
     String hex_str = pk.getHexBytes();
+
+    System.out.println("LORK pubkey " + hex_str);
     ByteString hex = HexUtil.hexStringToBytes(hex_str);
 
     return AddressUtil.getSimpleSpecForKey(hex, SignatureUtil.SIG_TYPE_ECDSA_COMPRESSED);
@@ -131,24 +135,133 @@ public class RoseUtil
     return AddressUtil.getHashForSpec(getSpecForPublicKey(pk));
   }
 
-  public static void checkSignature(Signature sig)
+  public static ByteString checkSignature(Signature sig)
     throws ValidationException
   {
     AddressSpec spec = getSpecForPublicKey(sig.getPublicKey());
     SigSpec sig_spec = spec.getSigSpecs(0);
 
-    ByteString sig_data = HexUtil.hexStringToBytes( sig.getHexBytes() );
-    ByteString data = HexUtil.hexStringToBytes( sig.getSigningPayload().getHexBytes() );
+    ByteString smash_sig = convertSig( HexUtil.hexStringToBytes( sig.getHexBytes() ) );
+    ByteString data = HexUtil.hexStringToBytes(sig.getSigningPayload().getHexBytes());
 
     // TODO - remove
     System.out.println("LORK Signature data: " + sig.getHexBytes());
+    System.out.println("LORK Signature data smash: " + HexUtil.getHexString(smash_sig));
     System.out.println("LORK Signed data: " + sig.getSigningPayload().getHexBytes());
 
+    try
+    {
+      java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+    
+      ByteString hashed_data = hashSha256(data);
 
-    if(!SignatureUtil.checkSignature(sig_spec, data, sig_data))
+      System.out.println("LORK reg " + SignatureUtil.checkSignature(sig_spec, data, smash_sig));
+      System.out.println("LORK sm " + SignatureUtil.checkSignature(sig_spec, hashed_data, smash_sig));
+      System.out.println("LORK hex " + SignatureUtil.checkSignature(sig_spec, ByteString.copyFrom( sig.getSigningPayload().getHexBytes().getBytes()), smash_sig));
+    }
+    catch(Exception e){throw new ValidationException(e);}
+  
+    if(!SignatureUtil.checkSignature(sig_spec, data, smash_sig))
     {
       throw new ValidationException("Signature check failed");
     }
+    return smash_sig;
 
   }
+
+  public static ByteString hashSha256(ByteString in)
+  {
+    try
+    {
+      java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+      return ByteString.copyFrom(md.digest(in.toByteArray()));
+
+    }
+    catch(Exception e){throw new RuntimeException(e);}
+
+
+  }
+
+  public static ByteString convertSig(ByteString raw_sig)
+  {
+    ByteString r = raw_sig.substring(0,32);
+    ByteString s = raw_sig.substring(32);
+
+    r = convertBigInteger(r);
+    s = convertBigInteger(s);
+
+    byte[] b = new byte[1];
+    ByteString der_sig = ByteString.EMPTY;
+    b[0]=0x30; der_sig = der_sig.concat(ByteString.copyFrom(b));
+    int len = r.size() + s.size() + 4;
+    b[0]=(byte)len; der_sig = der_sig.concat(ByteString.copyFrom(b));
+
+    b[0]=0x02; der_sig = der_sig.concat(ByteString.copyFrom(b));
+    b[0]=(byte)r.size(); der_sig = der_sig.concat(ByteString.copyFrom(b));
+    der_sig = der_sig.concat(r);
+
+    b[0]=0x02; der_sig = der_sig.concat(ByteString.copyFrom(b));
+    b[0]=(byte)s.size(); der_sig = der_sig.concat(ByteString.copyFrom(b));
+    der_sig = der_sig.concat(s);
+
+    System.out.println("LORK r " + HexUtil.getHexString(r));
+    System.out.println("LORK s " + HexUtil.getHexString(s));
+
+    return der_sig;
+  }
+
+  public static ByteString convertSigDerToRaw(ByteString der)
+  {
+    ByteBuffer buff = ByteBuffer.wrap( der.toByteArray() );
+
+    buff.get(); // 0x30
+    buff.get(); // total len
+    buff.get(); // 0x02
+    int len = buff.get();
+    System.out.println("Length: " + len);
+    byte[] r_b = new byte[len];
+    buff.get(r_b);
+
+    buff.get(); // 0x02
+    len = buff.get();
+    byte[] s_b = new byte[len];
+    buff.get(s_b);
+
+    return convertBigIntegerToFixed( ByteString.copyFrom(r_b) )
+      .concat(
+        convertBigIntegerToFixed( ByteString.copyFrom(s_b) ));
+
+
+  }
+
+  /** convert fixed length integer to dynamic length integer */
+  public static ByteString convertBigInteger(ByteString s)
+  {
+    BigInteger in = new BigInteger(1, s.toByteArray());
+
+    return ByteString.copyFrom( in.toByteArray() );
+  }
+
+  /**
+   * convert dynamic length integer to fixed length at 32 bytes
+   */
+  public static ByteString convertBigIntegerToFixed(ByteString dynamic)
+  {
+    BigInteger in = new BigInteger(1, dynamic.toByteArray());
+
+    ByteString s = ByteString.copyFrom( in.toByteArray() );
+    while (s.size() > 32)
+    {
+      s = s.substring(1);
+    }
+    while(s.size() < 32)
+    {
+      byte b[]=new byte[1];
+      b[0] = 0;
+      s = ByteString.copyFrom(b).concat(s);
+    }
+    return s;
+
+  }
+ 
 }

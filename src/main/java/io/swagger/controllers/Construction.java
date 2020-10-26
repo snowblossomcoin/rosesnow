@@ -71,7 +71,7 @@ public class Construction {
 
     for(Signature sig : req.getSignatures())
     {
-      RoseUtil.checkSignature(sig);
+      ByteString sig_bytes = RoseUtil.checkSignature(sig);
       AddressSpec spec = RoseUtil.getSpecForPublicKey(sig.getPublicKey());
 
       int claim_idx = 0;
@@ -83,7 +83,7 @@ public class Construction {
       s_tx.addSignatures( snowblossom.proto.SignatureEntry.newBuilder()
         .setClaimIdx(claim_idx)
         .setKeyIdx(0)
-        .setSignature( HexUtil.hexStringToBytes( sig.getHexBytes() ) )
+        .setSignature( sig_bytes )
         .build()
         );
 
@@ -269,13 +269,20 @@ public class Construction {
       AddressSpecHash hash = RoseUtil.getSpecHashForPublicKey(pk);
       SigningPayload load = new SigningPayload();
 
-      load.setHexBytes( HexUtil.getHexString(tx.getTxHash()));
+      //ByteString hash_data = RoseUtil.hashSha256( tx.getTxHash() );
+      ByteString hash_data = tx.getTxHash();
+
+      System.out.println("LORK payload: " + HexUtil.getHexString( hash_data ) );
+
+      load.setHexBytes( HexUtil.getHexString( hash_data ));
       load.setAccountIdentifier( new AccountIdentifier().address( hash.toAddressString(params) ) );
       load.setSignatureType( SignatureType.ECDSA );
 
       resp.getPayloads().add(load);
 
     }
+
+
 
 
     return new ResponseContext().entity(resp);
