@@ -230,7 +230,6 @@ public class ConstructionE2E
     {
       return WalletKeyPair.parseFrom( new FileInputStream(f));
     }
-
     WalletKeyPair wkp = KeyUtil.generateWalletStandardECKey();
 
     FileOutputStream out = new FileOutputStream(f, false);
@@ -238,9 +237,7 @@ public class ConstructionE2E
     out.write( wkp.toByteString().toByteArray() );
     out.flush();
     out.close();
-
     return wkp;
-
   }
 
 }

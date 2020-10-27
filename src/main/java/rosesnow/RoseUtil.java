@@ -21,6 +21,7 @@ import snowblossom.lib.ValidationException;
 import com.google.protobuf.ByteString;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import org.junit.Assert;
 
 public class RoseUtil
 {
@@ -210,22 +211,28 @@ public class RoseUtil
     return der_sig;
   }
 
+  
+  /** 
+   * Only used by tests
+   */
   public static ByteString convertSigDerToRaw(ByteString der)
   {
     ByteBuffer buff = ByteBuffer.wrap( der.toByteArray() );
 
-    buff.get(); // 0x30
+    Assert.assertEquals(0x30, buff.get()); // 0x30
     buff.get(); // total len
-    buff.get(); // 0x02
+    Assert.assertEquals(0x02, buff.get()); // 0x02
     int len = buff.get();
     System.out.println("Length: " + len);
     byte[] r_b = new byte[len];
     buff.get(r_b);
 
-    buff.get(); // 0x02
+    Assert.assertEquals(0x02, buff.get()); // 0x02
     len = buff.get();
     byte[] s_b = new byte[len];
     buff.get(s_b);
+
+    Assert.assertEquals(0, buff.remaining());
 
     return convertBigIntegerToFixed( ByteString.copyFrom(r_b) )
       .concat(

@@ -62,3 +62,18 @@ java_binary(
   ],
 )
 
+
+java_test(
+    name = "test_sig_coding",
+    srcs = ["test/unit/TestSigCoding.java"],
+    test_class = "TestSigCoding",
+    size="small",
+    deps = [
+      ":rosesnowlib",
+    	":rosesnowtestlib",
+      "@com_google_protobuf//:protobuf_java",
+      "@snowblossom//lib",
+      "@snowblossom//protolib:protogrpc",
+    ],
+)
+
