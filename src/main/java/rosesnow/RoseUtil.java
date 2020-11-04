@@ -124,7 +124,6 @@ public class RoseUtil
     }
     String hex_str = pk.getHexBytes();
 
-    System.out.println("LORK pubkey " + hex_str);
     ByteString hex = HexUtil.hexStringToBytes(hex_str);
 
     return AddressUtil.getSimpleSpecForKey(hex, SignatureUtil.SIG_TYPE_ECDSA_COMPRESSED);
@@ -136,33 +135,16 @@ public class RoseUtil
     return AddressUtil.getHashForSpec(getSpecForPublicKey(pk));
   }
 
-  public static ByteString checkSignature(Signature sig)
+  public static ByteString checkSignature(Signature sig, ByteString tx_hash)
     throws ValidationException
   {
     AddressSpec spec = getSpecForPublicKey(sig.getPublicKey());
     SigSpec sig_spec = spec.getSigSpecs(0);
 
     ByteString smash_sig = convertSig( HexUtil.hexStringToBytes( sig.getHexBytes() ) );
-    ByteString data = HexUtil.hexStringToBytes(sig.getSigningPayload().getHexBytes());
+    //ByteString data = HexUtil.hexStringToBytes(sig.getSigningPayload().getHexBytes());
 
-    // TODO - remove
-    System.out.println("LORK Signature data: " + sig.getHexBytes());
-    System.out.println("LORK Signature data smash: " + HexUtil.getHexString(smash_sig));
-    System.out.println("LORK Signed data: " + sig.getSigningPayload().getHexBytes());
-
-    try
-    {
-      java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
-    
-      ByteString hashed_data = hashSha256(data);
-
-      System.out.println("LORK reg " + SignatureUtil.checkSignature(sig_spec, data, smash_sig));
-      System.out.println("LORK sm " + SignatureUtil.checkSignature(sig_spec, hashed_data, smash_sig));
-      System.out.println("LORK hex " + SignatureUtil.checkSignature(sig_spec, ByteString.copyFrom( sig.getSigningPayload().getHexBytes().getBytes()), smash_sig));
-    }
-    catch(Exception e){throw new ValidationException(e);}
-  
-    if(!SignatureUtil.checkSignature(sig_spec, data, smash_sig))
+    if(!SignatureUtil.checkSignature(sig_spec, tx_hash, smash_sig))
     {
       throw new ValidationException("Signature check failed");
     }
@@ -179,10 +161,22 @@ public class RoseUtil
 
     }
     catch(Exception e){throw new RuntimeException(e);}
+  }
+  public static ByteString hashSha1(ByteString in)
+  {
+    try
+    {
+      java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-1");
+      return ByteString.copyFrom(md.digest(in.toByteArray()));
 
-
+    }
+    catch(Exception e){throw new RuntimeException(e);}
   }
 
+
+  /** 
+   * Converts signature from raw R|S style (64 bytes) to DER encoded (72 to 70 bytes or so)
+   */
   public static ByteString convertSig(ByteString raw_sig)
   {
     ByteString r = raw_sig.substring(0,32);
@@ -204,9 +198,6 @@ public class RoseUtil
     b[0]=0x02; der_sig = der_sig.concat(ByteString.copyFrom(b));
     b[0]=(byte)s.size(); der_sig = der_sig.concat(ByteString.copyFrom(b));
     der_sig = der_sig.concat(s);
-
-    System.out.println("LORK r " + HexUtil.getHexString(r));
-    System.out.println("LORK s " + HexUtil.getHexString(s));
 
     return der_sig;
   }

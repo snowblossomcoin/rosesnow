@@ -51,6 +51,8 @@ java_library(
     "@maven//:com_fasterxml_jackson_core_jackson_databind",
     "@maven//:com_fasterxml_jackson_core_jackson_annotations",
     "@maven//:junit_junit",
+    "@maven//:org_bouncycastle_bcpkix_jdk15on",
+    "@maven//:org_bouncycastle_bcprov_jdk15on",
   ],
 )
 
@@ -74,6 +76,8 @@ java_test(
       "@com_google_protobuf//:protobuf_java",
       "@snowblossom//lib",
       "@snowblossom//protolib:protogrpc",
+      "@maven//:org_bouncycastle_bcpkix_jdk15on",
+      "@maven//:org_bouncycastle_bcprov_jdk15on",
     ],
 )
 

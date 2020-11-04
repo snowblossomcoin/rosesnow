@@ -155,9 +155,13 @@ public class ConstructionE2E
      
       ByteString sign_data = HexUtil.hexStringToBytes( payload.getHexBytes() );
       
-      ByteString s = SignatureUtil.sign(wkp, sign_data);
+      java.security.PrivateKey priv_key = KeyUtil.decodePrivateKey(wkp.getPrivateKey(), "ECDSA");
 
-      s = RoseUtil.convertSigDerToRaw(s);
+      java.security.Signature sig_engine = java.security.Signature.getInstance("NONEwithECDSA","BC");
+      sig_engine.initSign(priv_key);
+      sig_engine.update( sign_data.toByteArray() );
+
+      ByteString s = RoseUtil.convertSigDerToRaw(ByteString.copyFrom(sig_engine.sign()));
 
       sig.setHexBytes( HexUtil.getHexString(s));
 

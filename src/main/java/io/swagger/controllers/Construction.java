@@ -71,7 +71,7 @@ public class Construction {
 
     for(Signature sig : req.getSignatures())
     {
-      ByteString sig_bytes = RoseUtil.checkSignature(sig);
+      ByteString sig_bytes = RoseUtil.checkSignature(sig, s_tx.getTxHash());
       AddressSpec spec = RoseUtil.getSpecForPublicKey(sig.getPublicKey());
 
       int claim_idx = 0;
@@ -269,8 +269,8 @@ public class Construction {
       AddressSpecHash hash = RoseUtil.getSpecHashForPublicKey(pk);
       SigningPayload load = new SigningPayload();
 
-      //ByteString hash_data = RoseUtil.hashSha256( tx.getTxHash() );
-      ByteString hash_data = tx.getTxHash();
+      ByteString hash_data = RoseUtil.hashSha1( tx.getTxHash() );
+      //ByteString hash_data = tx.getTxHash();
 
       System.out.println("LORK payload: " + HexUtil.getHexString( hash_data ) );
 
