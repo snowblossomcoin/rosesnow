@@ -13,12 +13,12 @@ import java.util.List;
  * Transactions contain an array of Operations that are attributable to the same TransactionIdentifier.
  **/
 @Schema(description = "Transactions contain an array of Operations that are attributable to the same TransactionIdentifier.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class Transaction   {
   @JsonProperty("transaction_identifier")
   private TransactionIdentifier transactionIdentifier = null;
   @JsonProperty("operations")
-  private List<Operation> operations = new ArrayList<>();
+  private List<Operation> operations = new ArrayList<Operation>();
   @JsonProperty("metadata")
   private Object metadata = null;
   /**

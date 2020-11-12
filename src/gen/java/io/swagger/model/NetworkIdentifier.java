@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * The network_identifier specifies which network a particular object is associated with.
  **/
 @Schema(description = "The network_identifier specifies which network a particular object is associated with.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class NetworkIdentifier   {
   @JsonProperty("blockchain")
   private String blockchain = null;

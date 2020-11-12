@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * ConstructionDeriveResponse is returned by the &#x60;/construction/derive&#x60; endpoint.
  **/
 @Schema(description = "ConstructionDeriveResponse is returned by the `/construction/derive` endpoint.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class ConstructionDeriveResponse   {
   @JsonProperty("address")
   private String address = null;

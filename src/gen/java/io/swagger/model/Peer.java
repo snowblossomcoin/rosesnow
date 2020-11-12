@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * A Peer is a representation of a node&#x27;s peer.
  **/
 @Schema(description = "A Peer is a representation of a node's peer.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class Peer   {
   @JsonProperty("peer_id")
   private String peerId = null;

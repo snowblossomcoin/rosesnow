@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * The block_identifier uniquely identifies a block in a particular network.
  **/
 @Schema(description = "The block_identifier uniquely identifies a block in a particular network.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class BlockIdentifier   {
   @JsonProperty("index")
   private Long index = null;

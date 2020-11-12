@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Coin contains its unique identifier and the amount it represents.
  **/
 @Schema(description = "Coin contains its unique identifier and the amount it represents.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class Coin   {
   @JsonProperty("coin_identifier")
   private CoinIdentifier coinIdentifier = null;

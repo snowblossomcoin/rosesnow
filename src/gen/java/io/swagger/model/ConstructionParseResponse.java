@@ -13,10 +13,10 @@ import java.util.List;
  * ConstructionParseResponse contains an array of operations that occur in a transaction blob. This should match the array of operations provided to &#x60;/construction/preprocess&#x60; and &#x60;/construction/payloads&#x60;.
  **/
 @Schema(description = "ConstructionParseResponse contains an array of operations that occur in a transaction blob. This should match the array of operations provided to `/construction/preprocess` and `/construction/payloads`.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class ConstructionParseResponse   {
   @JsonProperty("operations")
-  private List<Operation> operations = new ArrayList<>();
+  private List<Operation> operations = new ArrayList<Operation>();
   @JsonProperty("signers")
   private List<String> signers = null;
   @JsonProperty("account_identifier_signers")

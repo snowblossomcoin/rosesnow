@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Amount is some Value of a Currency. It is considered invalid to specify a Value without a Currency.
  **/
 @Schema(description = "Amount is some Value of a Currency. It is considered invalid to specify a Value without a Currency.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class Amount   {
   @JsonProperty("value")
   private String value = null;

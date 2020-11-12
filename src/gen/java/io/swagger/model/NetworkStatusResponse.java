@@ -14,7 +14,7 @@ import java.util.List;
  * NetworkStatusResponse contains basic information about the node&#x27;s view of a blockchain network. It is assumed that any BlockIdentifier.Index less than or equal to CurrentBlockIdentifier.Index can be queried. If a Rosetta implementation prunes historical state, it should populate the optional &#x60;oldest_block_identifier&#x60; field with the oldest block available to query. If this is not populated, it is assumed that the &#x60;genesis_block_identifier&#x60; is the oldest queryable block. If a Rosetta implementation performs some pre-sync before it is possible to query blocks, sync_status should be populated so that clients can still monitor healthiness. Without this field, it may appear that the implementation is stuck syncing and needs to be terminated.
  **/
 @Schema(description = "NetworkStatusResponse contains basic information about the node's view of a blockchain network. It is assumed that any BlockIdentifier.Index less than or equal to CurrentBlockIdentifier.Index can be queried. If a Rosetta implementation prunes historical state, it should populate the optional `oldest_block_identifier` field with the oldest block available to query. If this is not populated, it is assumed that the `genesis_block_identifier` is the oldest queryable block. If a Rosetta implementation performs some pre-sync before it is possible to query blocks, sync_status should be populated so that clients can still monitor healthiness. Without this field, it may appear that the implementation is stuck syncing and needs to be terminated.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class NetworkStatusResponse   {
   @JsonProperty("current_block_identifier")
   private BlockIdentifier currentBlockIdentifier = null;
@@ -27,7 +27,7 @@ public class NetworkStatusResponse   {
   @JsonProperty("sync_status")
   private SyncStatus syncStatus = null;
   @JsonProperty("peers")
-  private List<Peer> peers = new ArrayList<>();
+  private List<Peer> peers = new ArrayList<Peer>();
   /**
    **/
   public NetworkStatusResponse currentBlockIdentifier(BlockIdentifier currentBlockIdentifier) {

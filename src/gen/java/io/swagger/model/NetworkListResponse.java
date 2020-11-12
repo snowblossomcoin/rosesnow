@@ -12,10 +12,10 @@ import java.util.List;
  * A NetworkListResponse contains all NetworkIdentifiers that the node can serve information for.
  **/
 @Schema(description = "A NetworkListResponse contains all NetworkIdentifiers that the node can serve information for.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class NetworkListResponse   {
   @JsonProperty("network_identifiers")
-  private List<NetworkIdentifier> networkIdentifiers = new ArrayList<>();
+  private List<NetworkIdentifier> networkIdentifiers = new ArrayList<NetworkIdentifier>();
   /**
    **/
   public NetworkListResponse networkIdentifiers(List<NetworkIdentifier> networkIdentifiers) {

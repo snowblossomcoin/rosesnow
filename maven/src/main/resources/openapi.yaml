@@ -5,7 +5,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.4.5
+  version: 1.4.8
 servers:
 - url: /
 paths:
@@ -244,7 +244,7 @@ paths:
     post:
       tags:
       - Account
-      summary: Get an Account Balance
+      summary: Get an Account's Balance
       description: Get an array of all AccountBalances for an AccountIdentifier and
         the BlockIdentifier at which the balance lookup was performed. The BlockIdentifier
         must always be returned because some consumers of account balance data need
@@ -272,6 +272,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountBalanceResponse'
+        "500":
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-contentType: application/json
+      x-accepts: application/json
+  /account/coins:
+    post:
+      tags:
+      - Account
+      summary: Get an Account's Unspent Coins
+      description: Get an array of all unspent coins for an AccountIdentifier and
+        the BlockIdentifier at which the lookup was performed. If your implementation
+        does not support coins (i.e. it is for an account-based blockchain), you do
+        not need to implement this endpoint. If you implementation does support coins
+        (i.e. it is fro a UTXO-based blockchain), you MUST also complete the `/account/balance`
+        endpoint. It is important to note that making a coins request for an account
+        without populating the SubAccountIdentifier should not result in the coins
+        of all possible SubAccountIdentifiers being returned. Rather, it should result
+        in the coins pertaining to no SubAccountIdentifiers being returned. To get
+        all coins associated with an account, it may be necessary to perform multiple
+        coin requests with unique AccountIdentifiers. Optionally, an implementation
+        may choose to support updating an AccountIdentifier's unspent coins based
+        on the contents of the mempool. Note, using this functionality breaks any
+        guarantee of idempotency.
+      operationId: accountCoins
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountCoinsRequest'
+        required: true
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountCoinsResponse'
         "500":
           description: unexpected error
           content:
@@ -574,6 +615,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CallResponse'
+        "500":
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-contentType: application/json
+      x-accepts: application/json
+  /events/blocks:
+    post:
+      tags:
+      - Events
+      summary: '[INDEXER] Get a range of BlockEvents'
+      description: '`/events/blocks` allows the caller to query a sequence of BlockEvents
+        indicating which blocks were added and removed from storage to reach the current
+        state. Following BlockEvents allows lightweight clients to update their state
+        without needing to implement their own syncing logic (like finding the common
+        parent in a reorg). `/events/blocks` is considered an "indexer" endpoint and
+        Rosetta implementations are not required to complete it to adhere to the Rosetta
+        spec. However, any Rosetta "indexer" MUST support this endpoint.'
+      operationId: eventsBlocks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventsBlocksRequest'
+        required: true
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsBlocksResponse'
+        "500":
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-contentType: application/json
+      x-accepts: application/json
+  /search/transactions:
+    post:
+      tags:
+      - Search
+      summary: '[INDEXER] Search for Transactions'
+      description: '`/search/transactions` allows the caller to search for transactions
+        that meet certain conditions. Some conditions include matching a transaction
+        hash, containing an operation with a certain status, or containing an operation
+        that affects a certain account. `/search/transactions` is considered an "indexer"
+        endpoint and Rosetta implementations are not required to complete it to adhere
+        to the Rosetta spec. However, any Rosetta "indexer" MUST support this endpoint.'
+      operationId: searchTransactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchTransactionsRequest'
+        required: true
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchTransactionsResponse'
         "500":
           description: unexpected error
           content:
@@ -1015,7 +1123,6 @@ components:
     Operation:
       required:
       - operation_identifier
-      - status
       - type
       type: object
       properties:
@@ -1035,17 +1142,23 @@ components:
             $ref: '#/components/schemas/OperationIdentifier'
         type:
           type: string
-          description: The network-specific type of the operation. Ensure that any
-            type that can be returned here is also specified in the NetworkOptionsResponse.
+          description: Type is the network-specific type of the operation. Ensure
+            that any type that can be returned here is also specified in the NetworkOptionsResponse.
             This can be very useful to downstream consumers that parse all block data.
           example: Transfer
         status:
           type: string
-          description: The network-specific status of the operation. Status is not
-            defined on the transaction object because blockchains with smart contracts
-            may have transactions that partially apply. Blockchains with atomic transactions
+          description: Status is the network-specific status of the operation. Status
+            is not defined on the transaction object because blockchains with smart
+            contracts may have transactions that partially apply (some operations
+            are successful and some are not). Blockchains with atomic transactions
             (all operations succeed or all operations fail) will have the same status
-            for each operation.
+            for each operation. On-chain operations (operations retrieved in the `/block`
+            and `/block/transaction` endpoints) MUST have a populated status field
+            (anything on-chain must have succeeded or failed). However, operations
+            provided during transaction construction (often times called "intent"
+            in the documentation) MUST NOT have a populated status field (operations
+            yet to be included on-chain have not yet succeeded or failed).
           example: Reverted
         account:
           $ref: '#/components/schemas/AccountIdentifier'
@@ -1061,7 +1174,9 @@ components:
             hex: 48304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd012103301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
       description: Operations contain all balance-changing information within a transaction.
         They are always one-sided (only affect 1 AccountIdentifier) and can succeed
-        or fail independently from a Transaction.
+        or fail independently from a Transaction. Operations are used both to represent
+        on-chain data (Data API) and to construct new transactions (Construction API),
+        creating a standard interface for reading and writing to blockchains.
       example:
         amount:
           metadata: {}
@@ -1235,6 +1350,7 @@ components:
       - call_methods
       - errors
       - historical_balance_lookup
+      - mempool_coins
       - operation_statuses
       - operation_types
       type: object
@@ -1265,6 +1381,16 @@ components:
           type: boolean
           description: Any Rosetta implementation that supports querying the balance
             of an account at any height in the past should set this to true.
+        timestamp_start_index:
+          minimum: 0
+          type: integer
+          description: If populated, `timestamp_start_index` indicates the first block
+            index where block timestamps are considered valid (i.e. all blocks less
+            than `timestamp_start_index` could have invalid timestamps). This is useful
+            when the genesis block (or blocks) of a network have timestamp 0. If not
+            populated, block timestamps are assumed to be valid for all available
+            blocks.
+          format: int64
         call_methods:
           type: array
           description: All methods that are supported by the /call endpoint. Communicating
@@ -1285,6 +1411,12 @@ components:
             at any BlockIdentifier).
           items:
             $ref: '#/components/schemas/BalanceExemption'
+        mempool_coins:
+          type: boolean
+          description: Any Rosetta implementation that can update an AccountIdentifier's
+            unspent coins based on the contents of the mempool should populate this
+            field as true. If false, requests to `/account/coins` that set `include_mempool`
+            as true will be automatically rejected.
       description: Allow specifies supported Operation status, Operation types, and
         all possible error statuses. This Allow object is used by clients to validate
         the correctness of a Rosetta Server implementation. It is expected that these
@@ -1306,6 +1438,7 @@ components:
               Issuer: Satoshi
             decimals: 8
           exemption_type: greater_or_equal
+        mempool_coins: true
         operation_types:
         - TRANSFER
         - TRANSFER
@@ -1315,18 +1448,23 @@ components:
           successful: true
         - status: SUCCESS
           successful: true
+        timestamp_start_index: 0
         call_methods:
         - eth_call
         - eth_call
         errors:
         - retriable: true
           code: 12
+          description: This error is returned when the requested AccountIdentifier
+            is improperly formatted.
           details:
             address: 0x1dcc4de8dec75d7aab85b567b6
             error: not base64
           message: Invalid account format
         - retriable: true
           code: 12
+          description: This error is returned when the requested AccountIdentifier
+            is improperly formatted.
           details:
             address: 0x1dcc4de8dec75d7aab85b567b6
             error: not base64
@@ -1509,7 +1647,14 @@ components:
           $ref: '#/components/schemas/Amount'
       description: Coin contains its unique identifier and the amount it represents.
       example:
-        amount: null
+        amount:
+          metadata: {}
+          currency:
+            symbol: BTC
+            metadata:
+              Issuer: Satoshi
+            decimals: 8
+          value: "1238089899992"
         coin_identifier:
           identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
     BalanceExemption:
@@ -1558,6 +1703,131 @@ components:
       - greater_or_equal
       - less_or_equal
       - dynamic
+    BlockEvent:
+      required:
+      - block_identifier
+      - sequence
+      - type
+      type: object
+      properties:
+        sequence:
+          minimum: 0
+          type: integer
+          description: sequence is the unique identifier of a BlockEvent within the
+            context of a NetworkIdentifier.
+          format: int64
+          example: 5
+        block_identifier:
+          $ref: '#/components/schemas/BlockIdentifier'
+        type:
+          $ref: '#/components/schemas/BlockEventType'
+      description: BlockEvent represents the addition or removal of a BlockIdentifier
+        from storage. Streaming BlockEvents allows lightweight clients to update their
+        own state without needing to implement their own syncing logic.
+      example:
+        sequence: 5
+        type: block_added
+        block_identifier:
+          index: 1123941
+          hash: 0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85
+    BlockEventType:
+      type: string
+      description: BlockEventType determines if a BlockEvent represents the addition
+        or removal of a block.
+      enum:
+      - block_added
+      - block_removed
+    Operator:
+      type: string
+      description: Operator is used by query-related endpoints to determine how to
+        apply conditions. If this field is not populated, the default `and` value
+        will be used.
+      enum:
+      - or
+      - and
+    BlockTransaction:
+      required:
+      - block_identifier
+      - transaction
+      type: object
+      properties:
+        block_identifier:
+          $ref: '#/components/schemas/BlockIdentifier'
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+      description: BlockTransaction contains a populated Transaction and the BlockIdentifier
+        that contains it.
+      example:
+        transaction:
+          metadata:
+            size: 12378
+            lockTime: 1582272577
+          operations:
+          - amount:
+              metadata: {}
+              currency:
+                symbol: BTC
+                metadata:
+                  Issuer: Satoshi
+                decimals: 8
+              value: "1238089899992"
+            metadata:
+              asm: 304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd01
+                03301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+              hex: 48304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd012103301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+            related_operations:
+            - index: 1
+            - index: 2
+            type: Transfer
+            coin_change:
+              coin_identifier:
+                identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
+              coin_action: coin_created
+            account:
+              metadata: {}
+              address: 0x3a065000ab4183c6bf581dc1e55a605455fc6d61
+              sub_account:
+                metadata: {}
+                address: 0x6b175474e89094c44da98b954eedeac495271d0f
+            operation_identifier:
+              index: 5
+              network_index: 0
+            status: Reverted
+          - amount:
+              metadata: {}
+              currency:
+                symbol: BTC
+                metadata:
+                  Issuer: Satoshi
+                decimals: 8
+              value: "1238089899992"
+            metadata:
+              asm: 304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd01
+                03301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+              hex: 48304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd012103301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+            related_operations:
+            - index: 1
+            - index: 2
+            type: Transfer
+            coin_change:
+              coin_identifier:
+                identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
+              coin_action: coin_created
+            account:
+              metadata: {}
+              address: 0x3a065000ab4183c6bf581dc1e55a605455fc6d61
+              sub_account:
+                metadata: {}
+                address: 0x6b175474e89094c44da98b954eedeac495271d0f
+            operation_identifier:
+              index: 5
+              network_index: 0
+            status: Reverted
+          transaction_identifier:
+            hash: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f
+        block_identifier:
+          index: 1123941
+          hash: 0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85
     AccountBalanceRequest:
       required:
       - account_identifier
@@ -1570,6 +1840,14 @@ components:
           $ref: '#/components/schemas/AccountIdentifier'
         block_identifier:
           $ref: '#/components/schemas/PartialBlockIdentifier'
+        currencies:
+          type: array
+          description: In some cases, the caller may not want to retrieve all available
+            balances for an AccountIdentifier. If the currencies field is populated,
+            only balances for the specified currencies will be returned. If not populated,
+            all available balances will be returned.
+          items:
+            $ref: '#/components/schemas/Currency'
       description: An AccountBalanceRequest is utilized to make a balance request
         on the /account/balance endpoint. If the block_identifier is populated, a
         historical balance query should be performed.
@@ -1586,14 +1864,6 @@ components:
           description: A single account may have a balance in multiple currencies.
           items:
             $ref: '#/components/schemas/Amount'
-        coins:
-          type: array
-          description: If a blockchain is UTXO-based, all unspent Coins owned by an
-            account_identifier should be returned alongside the balance. It is highly
-            recommended to populate this field so that users of the Rosetta API implementation
-            don't need to maintain their own indexer to track their UTXOs.
-          items:
-            $ref: '#/components/schemas/Coin'
         metadata:
           type: object
           description: Account-based blockchains that utilize a nonce or sequence
@@ -1604,7 +1874,8 @@ components:
       description: 'An AccountBalanceResponse is returned on the /account/balance
         endpoint. If an account has a balance for each AccountIdentifier describing
         it (ex: an ERC-20 token balance on a few smart contracts), an account balance
-        request must be made with each AccountIdentifier.'
+        request must be made with each AccountIdentifier. The `coins` field was removed
+        and replaced by by `/account/coins` in `v1.4.7`.'
       example:
         balances:
         - metadata: {}
@@ -1623,11 +1894,82 @@ components:
           value: "1238089899992"
         metadata:
           sequence_number: 23
+        block_identifier:
+          index: 1123941
+          hash: 0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85
+    AccountCoinsRequest:
+      required:
+      - account_identifier
+      - include_mempool
+      - network_identifier
+      type: object
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        account_identifier:
+          $ref: '#/components/schemas/AccountIdentifier'
+        include_mempool:
+          type: boolean
+          description: Include state from the mempool when looking up an account's
+            unspent coins. Note, using this functionality breaks any guarantee of
+            idempotency.
+        currencies:
+          type: array
+          description: In some cases, the caller may not want to retrieve coins for
+            all currencies for an AccountIdentifier. If the currencies field is populated,
+            only coins for the specified currencies will be returned. If not populated,
+            all unspent coins will be returned.
+          items:
+            $ref: '#/components/schemas/Currency'
+      description: AccountCoinsRequest is utilized to make a request on the /account/coins
+        endpoint.
+    AccountCoinsResponse:
+      required:
+      - block_identifier
+      - coins
+      type: object
+      properties:
+        block_identifier:
+          $ref: '#/components/schemas/BlockIdentifier'
         coins:
-        - amount: null
+          type: array
+          description: If a blockchain is UTXO-based, all unspent Coins owned by an
+            account_identifier should be returned alongside the balance. It is highly
+            recommended to populate this field so that users of the Rosetta API implementation
+            don't need to maintain their own indexer to track their UTXOs.
+          items:
+            $ref: '#/components/schemas/Coin'
+        metadata:
+          type: object
+          description: Account-based blockchains that utilize a nonce or sequence
+            number should include that number in the metadata. This number could be
+            unique to the identifier or global across the account address.
+          example:
+            sequence_number: 23
+      description: AccountCoinsResponse is returned on the /account/coins endpoint
+        and includes all unspent Coins owned by an AccountIdentifier.
+      example:
+        metadata:
+          sequence_number: 23
+        coins:
+        - amount:
+            metadata: {}
+            currency:
+              symbol: BTC
+              metadata:
+                Issuer: Satoshi
+              decimals: 8
+            value: "1238089899992"
           coin_identifier:
             identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
-        - amount: null
+        - amount:
+            metadata: {}
+            currency:
+              symbol: BTC
+              metadata:
+                Issuer: Satoshi
+              decimals: 8
+            value: "1238089899992"
           coin_identifier:
             identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
         block_identifier:
@@ -2137,6 +2479,7 @@ components:
                 Issuer: Satoshi
               decimals: 8
             exemption_type: greater_or_equal
+          mempool_coins: true
           operation_types:
           - TRANSFER
           - TRANSFER
@@ -2146,18 +2489,23 @@ components:
             successful: true
           - status: SUCCESS
             successful: true
+          timestamp_start_index: 0
           call_methods:
           - eth_call
           - eth_call
           errors:
           - retriable: true
             code: 12
+            description: This error is returned when the requested AccountIdentifier
+              is improperly formatted.
             details:
               address: 0x1dcc4de8dec75d7aab85b567b6
               error: not base64
             message: Invalid account format
           - retriable: true
             code: 12
+            description: This error is returned when the requested AccountIdentifier
+              is improperly formatted.
             details:
               address: 0x1dcc4de8dec75d7aab85b567b6
               error: not base64
@@ -2640,6 +2988,295 @@ components:
         result:
           count: 1000
         idempotent: true
+    EventsBlocksRequest:
+      required:
+      - network_identifier
+      type: object
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        offset:
+          minimum: 0
+          type: integer
+          description: offset is the offset into the event stream to sync events from.
+            If this field is not populated, we return the limit events backwards from
+            tip. If this is set to 0, we start from the beginning.
+          format: int64
+          example: 5
+        limit:
+          minimum: 0
+          type: integer
+          description: limit is the maximum number of events to fetch in one call.
+            The implementation may return <= limit events.
+          format: int64
+          example: 5
+      description: EventsBlocksRequest is utilized to fetch a sequence of BlockEvents
+        indicating which blocks were added and removed from storage to reach the current
+        state.
+    EventsBlocksResponse:
+      required:
+      - events
+      - max_sequence
+      type: object
+      properties:
+        max_sequence:
+          minimum: 0
+          type: integer
+          description: max_sequence is the maximum available sequence number to fetch.
+          format: int64
+          example: 5
+        events:
+          type: array
+          description: events is an array of BlockEvents indicating the order to add
+            and remove blocks to maintain a canonical view of blockchain state. Lightweight
+            clients can use this event stream to update state without implementing
+            their own block syncing logic.
+          items:
+            $ref: '#/components/schemas/BlockEvent'
+      description: EventsBlocksResponse contains an ordered collection of BlockEvents
+        and the max retrievable sequence.
+      example:
+        max_sequence: 5
+        events:
+        - sequence: 5
+          type: block_added
+          block_identifier:
+            index: 1123941
+            hash: 0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85
+        - sequence: 5
+          type: block_added
+          block_identifier:
+            index: 1123941
+            hash: 0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85
+    SearchTransactionsRequest:
+      required:
+      - network_identifier
+      type: object
+      properties:
+        network_identifier:
+          $ref: '#/components/schemas/NetworkIdentifier'
+        operator:
+          $ref: '#/components/schemas/Operator'
+        max_block:
+          minimum: 0
+          type: integer
+          description: max_block is the largest block index to consider when searching
+            for transactions. If this field is not populated, the current block is
+            considered the max_block. If you do not specify a max_block, it is possible
+            a newly synced block will interfere with paginated transaction queries
+            (as the offset could become invalid with newly added rows).
+          format: int64
+          example: 5
+        offset:
+          minimum: 0
+          type: integer
+          description: offset is the offset into the query result to start returning
+            transactions. If any search conditions are changed, the query offset will
+            change and you must restart your search iteration.
+          format: int64
+          example: 5
+        limit:
+          minimum: 0
+          type: integer
+          description: limit is the maximum number of transactions to return in one
+            call. The implementation may return <= limit transactions.
+          format: int64
+          example: 5
+        transaction_identifier:
+          $ref: '#/components/schemas/TransactionIdentifier'
+        account_identifier:
+          $ref: '#/components/schemas/AccountIdentifier'
+        coin_identifier:
+          $ref: '#/components/schemas/CoinIdentifier'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        status:
+          type: string
+          description: status is the network-specific operation type.
+          example: reverted
+        type:
+          type: string
+          description: type is the network-specific operation type.
+          example: transfer
+        address:
+          type: string
+          description: address is AccountIdentifier.Address. This is used to get all
+            transactions related to an AccountIdentifier.Address, regardless of SubAccountIdentifier.
+          example: 0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347
+        success:
+          type: boolean
+          description: success is a synthetic condition populated by parsing network-specific
+            operation statuses (using the mapping provided in `/network/options`).
+      description: SearchTransactionsRequest is used to search for transactions matching
+        a set of provided conditions in canonical blocks.
+    SearchTransactionsResponse:
+      required:
+      - transactions
+      type: object
+      properties:
+        next_offset:
+          minimum: 0
+          type: integer
+          description: next_offset is the next offset to use when paginating through
+            transaction results. If this field is not populated, there are no more
+            transactions to query.
+          format: int64
+          example: 5
+        transactions:
+          type: array
+          description: transactions is an array of BlockTransactions sorted by most
+            recent BlockIdentifier (meaning that transactions in recent blocks appear
+            first). If there are many transactions for a particular search, transactions
+            may not contain all matching transactions. It is up to the caller to paginate
+            these transactions using the max_block field.
+          items:
+            $ref: '#/components/schemas/BlockTransaction'
+      description: SearchTransactionsResponse contains an ordered collection of BlockTransactions
+        that match the query in SearchTransactionsRequest. These BlockTransactions
+        are sorted from most recent block to oldest block.
+      example:
+        transactions:
+        - transaction:
+            metadata:
+              size: 12378
+              lockTime: 1582272577
+            operations:
+            - amount:
+                metadata: {}
+                currency:
+                  symbol: BTC
+                  metadata:
+                    Issuer: Satoshi
+                  decimals: 8
+                value: "1238089899992"
+              metadata:
+                asm: 304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd01
+                  03301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+                hex: 48304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd012103301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+              related_operations:
+              - index: 1
+              - index: 2
+              type: Transfer
+              coin_change:
+                coin_identifier:
+                  identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
+                coin_action: coin_created
+              account:
+                metadata: {}
+                address: 0x3a065000ab4183c6bf581dc1e55a605455fc6d61
+                sub_account:
+                  metadata: {}
+                  address: 0x6b175474e89094c44da98b954eedeac495271d0f
+              operation_identifier:
+                index: 5
+                network_index: 0
+              status: Reverted
+            - amount:
+                metadata: {}
+                currency:
+                  symbol: BTC
+                  metadata:
+                    Issuer: Satoshi
+                  decimals: 8
+                value: "1238089899992"
+              metadata:
+                asm: 304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd01
+                  03301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+                hex: 48304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd012103301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+              related_operations:
+              - index: 1
+              - index: 2
+              type: Transfer
+              coin_change:
+                coin_identifier:
+                  identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
+                coin_action: coin_created
+              account:
+                metadata: {}
+                address: 0x3a065000ab4183c6bf581dc1e55a605455fc6d61
+                sub_account:
+                  metadata: {}
+                  address: 0x6b175474e89094c44da98b954eedeac495271d0f
+              operation_identifier:
+                index: 5
+                network_index: 0
+              status: Reverted
+            transaction_identifier:
+              hash: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f
+          block_identifier:
+            index: 1123941
+            hash: 0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85
+        - transaction:
+            metadata:
+              size: 12378
+              lockTime: 1582272577
+            operations:
+            - amount:
+                metadata: {}
+                currency:
+                  symbol: BTC
+                  metadata:
+                    Issuer: Satoshi
+                  decimals: 8
+                value: "1238089899992"
+              metadata:
+                asm: 304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd01
+                  03301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+                hex: 48304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd012103301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+              related_operations:
+              - index: 1
+              - index: 2
+              type: Transfer
+              coin_change:
+                coin_identifier:
+                  identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
+                coin_action: coin_created
+              account:
+                metadata: {}
+                address: 0x3a065000ab4183c6bf581dc1e55a605455fc6d61
+                sub_account:
+                  metadata: {}
+                  address: 0x6b175474e89094c44da98b954eedeac495271d0f
+              operation_identifier:
+                index: 5
+                network_index: 0
+              status: Reverted
+            - amount:
+                metadata: {}
+                currency:
+                  symbol: BTC
+                  metadata:
+                    Issuer: Satoshi
+                  decimals: 8
+                value: "1238089899992"
+              metadata:
+                asm: 304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd01
+                  03301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+                hex: 48304502201fd8abb11443f8b1b9a04e0495e0543d05611473a790c8939f089d073f90509a022100f4677825136605d732e2126d09a2d38c20c75946cd9fc239c0497e84c634e3dd012103301a8259a12e35694cc22ebc45fee635f4993064190f6ce96e7fb19a03bb6be2
+              related_operations:
+              - index: 1
+              - index: 2
+              type: Transfer
+              coin_change:
+                coin_identifier:
+                  identifier: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f:1
+                coin_action: coin_created
+              account:
+                metadata: {}
+                address: 0x3a065000ab4183c6bf581dc1e55a605455fc6d61
+                sub_account:
+                  metadata: {}
+                  address: 0x6b175474e89094c44da98b954eedeac495271d0f
+              operation_identifier:
+                index: 5
+                network_index: 0
+              status: Reverted
+            transaction_identifier:
+              hash: 0x2f23fd8cca835af21f3ac375bac601f97ead75f2e79143bdf71fe2c4be043e8f
+          block_identifier:
+            index: 1123941
+            hash: 0x1f2cc6c5027d2f201a5453ad1119574d2aed23a392654742ac3c78783c071f85
+        next_offset: 5
     Error:
       required:
       - code
@@ -2660,6 +3297,20 @@ components:
             NOT change for a given code. In particular, this means that any contextual
             information should be included in the details field.
           example: Invalid account format
+        description:
+          type: string
+          description: Description allows the implementer to optionally provide additional
+            information about an error. In many cases, the content of this field will
+            be a copy-and-paste from existing developer documentation. Description
+            can ONLY be populated with generic information about a particular type
+            of error. It MUST NOT be populated with information about a particular
+            instantiation of an error (use `details` for this). Whereas the content
+            of Error.Message should stay stable across releases, the content of Error.Description
+            will likely change across releases (as implementers improve error documentation).
+            For this reason, the content in this field is not part of any type assertion
+            (unlike Error.Message).
+          example: This error is returned when the requested AccountIdentifier is
+            improperly formatted.
         retriable:
           type: boolean
           description: An error is retriable if the same request may succeed if submitted
@@ -2679,6 +3330,8 @@ components:
       example:
         retriable: true
         code: 12
+        description: This error is returned when the requested AccountIdentifier is
+          improperly formatted.
         details:
           address: 0x1dcc4de8dec75d7aab85b567b6
           error: not base64

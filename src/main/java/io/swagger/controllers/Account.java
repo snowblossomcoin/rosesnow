@@ -30,11 +30,15 @@ import snowblossom.lib.TransactionBridge;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class Account 
 {
-  /** 
-   * Uncomment and implement as you see fit.  These operations will map
-   * Directly to operation calls from the routing logic.  Because the inflector
-   * Code allows you to implement logic incrementally, they are disabled.
-   **/
+  public ResponseContext accountCoins(RequestContext request , AccountCoinsRequest body)
+    throws Exception
+  {
+    AccountCoinsRequest req = new ObjectMapper().readValue(body.toString(), AccountCoinsRequest.class);
+    
+    return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
+
+  }
+
 
   public ResponseContext accountBalance(RequestContext request , JsonNode body) 
     throws Exception
@@ -94,7 +98,7 @@ public class Account
       coins.add(c);
 
     }
-    resp.setCoins(coins);
+    //resp.setCoins(coins);
     resp.getBalances().add( RoseUtil.getSnowAmount( total, node.getParams() ) );
     resp.setBlockIdentifier( new BlockIdentifier().hash(block_hash.toString()).index( (long) header.getBlockHeight()));
 

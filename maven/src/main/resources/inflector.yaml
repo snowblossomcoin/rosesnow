@@ -6,14 +6,19 @@ modelMappings:
   DefinitionFromSwaggerSpecification: fully.qualified.path.to.Model
   AccountBalanceRequest : io.swagger.model.AccountBalanceRequest
 AccountBalanceResponse : io.swagger.model.AccountBalanceResponse
+AccountCoinsRequest : io.swagger.model.AccountCoinsRequest
+AccountCoinsResponse : io.swagger.model.AccountCoinsResponse
 AccountIdentifier : io.swagger.model.AccountIdentifier
 Allow : io.swagger.model.Allow
 Amount : io.swagger.model.Amount
 BalanceExemption : io.swagger.model.BalanceExemption
 Block : io.swagger.model.Block
+BlockEvent : io.swagger.model.BlockEvent
+BlockEventType : io.swagger.model.BlockEventType
 BlockIdentifier : io.swagger.model.BlockIdentifier
 BlockRequest : io.swagger.model.BlockRequest
 BlockResponse : io.swagger.model.BlockResponse
+BlockTransaction : io.swagger.model.BlockTransaction
 BlockTransactionRequest : io.swagger.model.BlockTransactionRequest
 BlockTransactionResponse : io.swagger.model.BlockTransactionResponse
 CallRequest : io.swagger.model.CallRequest
@@ -39,6 +44,8 @@ ConstructionSubmitRequest : io.swagger.model.ConstructionSubmitRequest
 Currency : io.swagger.model.Currency
 CurveType : io.swagger.model.CurveType
 Error : io.swagger.model.Error
+EventsBlocksRequest : io.swagger.model.EventsBlocksRequest
+EventsBlocksResponse : io.swagger.model.EventsBlocksResponse
 ExemptionType : io.swagger.model.ExemptionType
 MempoolResponse : io.swagger.model.MempoolResponse
 MempoolTransactionRequest : io.swagger.model.MempoolTransactionRequest
@@ -52,9 +59,12 @@ NetworkStatusResponse : io.swagger.model.NetworkStatusResponse
 Operation : io.swagger.model.Operation
 OperationIdentifier : io.swagger.model.OperationIdentifier
 OperationStatus : io.swagger.model.OperationStatus
+Operator : io.swagger.model.Operator
 PartialBlockIdentifier : io.swagger.model.PartialBlockIdentifier
 Peer : io.swagger.model.Peer
 PublicKey : io.swagger.model.PublicKey
+SearchTransactionsRequest : io.swagger.model.SearchTransactionsRequest
+SearchTransactionsResponse : io.swagger.model.SearchTransactionsResponse
 Signature : io.swagger.model.Signature
 SignatureType : io.swagger.model.SignatureType
 SigningPayload : io.swagger.model.SigningPayload

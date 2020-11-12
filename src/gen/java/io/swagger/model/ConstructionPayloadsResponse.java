@@ -12,12 +12,12 @@ import java.util.List;
  * ConstructionTransactionResponse is returned by &#x60;/construction/payloads&#x60;. It contains an unsigned transaction blob (that is usually needed to construct the a network transaction from a collection of signatures) and an array of payloads that must be signed by the caller.
  **/
 @Schema(description = "ConstructionTransactionResponse is returned by `/construction/payloads`. It contains an unsigned transaction blob (that is usually needed to construct the a network transaction from a collection of signatures) and an array of payloads that must be signed by the caller.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class ConstructionPayloadsResponse   {
   @JsonProperty("unsigned_transaction")
   private String unsignedTransaction = null;
   @JsonProperty("payloads")
-  private List<SigningPayload> payloads = new ArrayList<>();
+  private List<SigningPayload> payloads = new ArrayList<SigningPayload>();
   /**
    **/
   public ConstructionPayloadsResponse unsignedTransaction(String unsignedTransaction) {

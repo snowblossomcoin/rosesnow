@@ -47,7 +47,7 @@ public class Network
     NetworkOptionsResponse options = new NetworkOptionsResponse();
 
     Version ver = new Version();
-    ver.setRosettaVersion("1.4.5");
+    ver.setRosettaVersion("1.4.8");
     ver.setNodeVersion( Globals.VERSION );
     ver.setMiddlewareVersion( RoseSnow.VERSION );
     options.setVersion(ver);

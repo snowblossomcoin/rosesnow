@@ -2,28 +2,28 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.model.Amount;
 import io.swagger.model.BlockIdentifier;
+import io.swagger.model.Coin;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * An AccountBalanceResponse is returned on the /account/balance endpoint. If an account has a balance for each AccountIdentifier describing it (ex: an ERC-20 token balance on a few smart contracts), an account balance request must be made with each AccountIdentifier. The &#x60;coins&#x60; field was removed and replaced by by &#x60;/account/coins&#x60; in &#x60;v1.4.7&#x60;.
+ * AccountCoinsResponse is returned on the /account/coins endpoint and includes all unspent Coins owned by an AccountIdentifier.
  **/
-@Schema(description = "An AccountBalanceResponse is returned on the /account/balance endpoint. If an account has a balance for each AccountIdentifier describing it (ex: an ERC-20 token balance on a few smart contracts), an account balance request must be made with each AccountIdentifier. The `coins` field was removed and replaced by by `/account/coins` in `v1.4.7`.")
+@Schema(description = "AccountCoinsResponse is returned on the /account/coins endpoint and includes all unspent Coins owned by an AccountIdentifier.")
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
-public class AccountBalanceResponse   {
+public class AccountCoinsResponse   {
   @JsonProperty("block_identifier")
   private BlockIdentifier blockIdentifier = null;
-  @JsonProperty("balances")
-  private List<Amount> balances = new ArrayList<Amount>();
+  @JsonProperty("coins")
+  private List<Coin> coins = new ArrayList<Coin>();
   @JsonProperty("metadata")
   private Object metadata = null;
   /**
    **/
-  public AccountBalanceResponse blockIdentifier(BlockIdentifier blockIdentifier) {
+  public AccountCoinsResponse blockIdentifier(BlockIdentifier blockIdentifier) {
     this.blockIdentifier = blockIdentifier;
     return this;
   }
@@ -39,27 +39,27 @@ public class AccountBalanceResponse   {
   }
 
   /**
-   * A single account may have a balance in multiple currencies.
+   * If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier should be returned alongside the balance. It is highly recommended to populate this field so that users of the Rosetta API implementation don't need to maintain their own indexer to track their UTXOs.
    **/
-  public AccountBalanceResponse balances(List<Amount> balances) {
-    this.balances = balances;
+  public AccountCoinsResponse coins(List<Coin> coins) {
+    this.coins = coins;
     return this;
   }
 
   
-  @Schema(required = true, description = "A single account may have a balance in multiple currencies.")
-  @JsonProperty("balances")
-  public List<Amount> getBalances() {
-    return balances;
+  @Schema(required = true, description = "If a blockchain is UTXO-based, all unspent Coins owned by an account_identifier should be returned alongside the balance. It is highly recommended to populate this field so that users of the Rosetta API implementation don't need to maintain their own indexer to track their UTXOs.")
+  @JsonProperty("coins")
+  public List<Coin> getCoins() {
+    return coins;
   }
-  public void setBalances(List<Amount> balances) {
-    this.balances = balances;
+  public void setCoins(List<Coin> coins) {
+    this.coins = coins;
   }
 
   /**
    * Account-based blockchains that utilize a nonce or sequence number should include that number in the metadata. This number could be unique to the identifier or global across the account address.
    **/
-  public AccountBalanceResponse metadata(Object metadata) {
+  public AccountCoinsResponse metadata(Object metadata) {
     this.metadata = metadata;
     return this;
   }
@@ -83,23 +83,23 @@ public class AccountBalanceResponse   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AccountBalanceResponse accountBalanceResponse = (AccountBalanceResponse) o;
-    return Objects.equals(blockIdentifier, accountBalanceResponse.blockIdentifier) &&
-        Objects.equals(balances, accountBalanceResponse.balances) &&
-        Objects.equals(metadata, accountBalanceResponse.metadata);
+    AccountCoinsResponse accountCoinsResponse = (AccountCoinsResponse) o;
+    return Objects.equals(blockIdentifier, accountCoinsResponse.blockIdentifier) &&
+        Objects.equals(coins, accountCoinsResponse.coins) &&
+        Objects.equals(metadata, accountCoinsResponse.metadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(blockIdentifier, balances, metadata);
+    return Objects.hash(blockIdentifier, coins, metadata);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AccountBalanceResponse {\n");
+    sb.append("class AccountCoinsResponse {\n");
     sb.append("    blockIdentifier: ").append(toIndentedString(blockIdentifier)).append("\n");
-    sb.append("    balances: ").append(toIndentedString(balances)).append("\n");
+    sb.append("    coins: ").append(toIndentedString(coins)).append("\n");
     sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
     sb.append("}");
     return sb.toString();

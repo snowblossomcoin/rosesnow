@@ -46,4 +46,24 @@ to get it going get the node started.  However, my guess is that integrations wi
 for an online node so it should work fine.
 
 
+# Updates
+import into swaggerhub
+https://raw.githubusercontent.com/coinbase/rosetta-specifications/master/api.json
+
+export server -> inflector
+unzip
+
+copy openapi3.yaml ./src/main/resources/openapi.yaml
+copy inflector.yaml ./src/main/resources/inflector.yaml
+replace swaggerUrl: openapi.yaml
+
+rsync src/gen to src/gen
+
+Manually fix things in controller
+
+
+
+
+
+
 

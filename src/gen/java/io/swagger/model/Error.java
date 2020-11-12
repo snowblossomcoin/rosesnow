@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Instead of utilizing HTTP status codes to describe node errors (which often do not have a good analog), rich errors are returned using this object. Both the code and message fields can be individually used to correctly identify an error. Implementations MUST use unique values for both fields.
  **/
 @Schema(description = "Instead of utilizing HTTP status codes to describe node errors (which often do not have a good analog), rich errors are returned using this object. Both the code and message fields can be individually used to correctly identify an error. Implementations MUST use unique values for both fields.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class Error   {
   @JsonProperty("code")
   private Integer code = null;
   @JsonProperty("message")
   private String message = null;
+  @JsonProperty("description")
+  private String description = null;
   @JsonProperty("retriable")
   private Boolean retriable = null;
   @JsonProperty("details")
@@ -54,6 +56,24 @@ public class Error   {
   }
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  /**
+   * Description allows the implementer to optionally provide additional information about an error. In many cases, the content of this field will be a copy-and-paste from existing developer documentation. Description can ONLY be populated with generic information about a particular type of error. It MUST NOT be populated with information about a particular instantiation of an error (use `details` for this). Whereas the content of Error.Message should stay stable across releases, the content of Error.Description will likely change across releases (as implementers improve error documentation). For this reason, the content in this field is not part of any type assertion (unlike Error.Message).
+   **/
+  public Error description(String description) {
+    this.description = description;
+    return this;
+  }
+
+  
+  @Schema(example = "This error is returned when the requested AccountIdentifier is improperly formatted.", description = "Description allows the implementer to optionally provide additional information about an error. In many cases, the content of this field will be a copy-and-paste from existing developer documentation. Description can ONLY be populated with generic information about a particular type of error. It MUST NOT be populated with information about a particular instantiation of an error (use `details` for this). Whereas the content of Error.Message should stay stable across releases, the content of Error.Description will likely change across releases (as implementers improve error documentation). For this reason, the content in this field is not part of any type assertion (unlike Error.Message).")
+  @JsonProperty("description")
+  public String getDescription() {
+    return description;
+  }
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   /**
@@ -104,13 +124,14 @@ public class Error   {
     Error error = (Error) o;
     return Objects.equals(code, error.code) &&
         Objects.equals(message, error.message) &&
+        Objects.equals(description, error.description) &&
         Objects.equals(retriable, error.retriable) &&
         Objects.equals(details, error.details);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, message, retriable, details);
+    return Objects.hash(code, message, description, retriable, details);
   }
 
   @Override
@@ -119,6 +140,7 @@ public class Error   {
     sb.append("class Error {\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    retriable: ").append(toIndentedString(retriable)).append("\n");
     sb.append("    details: ").append(toIndentedString(details)).append("\n");
     sb.append("}");

@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * CallResponse contains the result of a &#x60;/call&#x60; invocation.
  **/
 @Schema(description = "CallResponse contains the result of a `/call` invocation.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class CallResponse   {
   @JsonProperty("result")
   private Object result = null;

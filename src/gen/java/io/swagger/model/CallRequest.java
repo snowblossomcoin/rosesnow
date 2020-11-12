@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * CallRequest is the input to the &#x60;/call&#x60; endpoint.
  **/
 @Schema(description = "CallRequest is the input to the `/call` endpoint.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class CallRequest   {
   @JsonProperty("network_identifier")
   private NetworkIdentifier networkIdentifier = null;

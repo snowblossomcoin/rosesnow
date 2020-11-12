@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * The transaction_identifier uniquely identifies a transaction in a particular network and block or in the mempool.
  **/
 @Schema(description = "The transaction_identifier uniquely identifies a transaction in a particular network and block or in the mempool.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class TransactionIdentifier   {
   @JsonProperty("hash")
   private String hash = null;

@@ -1,19 +1,12 @@
 package io.swagger.controllers;
 
-import io.swagger.oas.inflector.models.RequestContext;
-import io.swagger.oas.inflector.models.ResponseContext;
-import javax.ws.rs.core.Response.Status;
-
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import snowblossom.lib.ValidationException;
-import java.io.File;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
+import com.google.protobuf.ByteString;
 import io.swagger.model.*;
-
 import io.swagger.model.ConstructionCombineRequest;
 import io.swagger.model.ConstructionCombineResponse;
-import java.util.LinkedList;
 import io.swagger.model.ConstructionDeriveRequest;
 import io.swagger.model.ConstructionDeriveResponse;
 import io.swagger.model.ConstructionHashRequest;
@@ -26,33 +19,26 @@ import io.swagger.model.ConstructionPayloadsResponse;
 import io.swagger.model.ConstructionPreprocessRequest;
 import io.swagger.model.ConstructionPreprocessResponse;
 import io.swagger.model.ConstructionSubmitRequest;
-import io.swagger.model.Error;
 import io.swagger.model.TransactionIdentifierResponse;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.oas.inflector.models.RequestContext;
+import io.swagger.oas.inflector.models.ResponseContext;
+import java.util.HashSet;
+import java.util.LinkedList;
 import org.snowblossom.rosesnow.RoseSnow;
 import org.snowblossom.rosesnow.RoseUtil;
-import snowblossom.lib.ChainHash;
+import snowblossom.lib.AddressSpecHash;
+import snowblossom.lib.AddressUtil;
+import snowblossom.lib.DigestUtil;
 import snowblossom.lib.Globals;
+import snowblossom.lib.HexUtil;
+import snowblossom.lib.NetworkParams;
+import snowblossom.lib.TransactionUtil;
+import snowblossom.lib.ValidationException;
 import snowblossom.node.SnowBlossomNode;
-import snowblossom.proto.BlockHeader;
+import snowblossom.proto.AddressSpec;
 import snowblossom.proto.TransactionInner;
 import snowblossom.proto.TransactionInput;
 import snowblossom.proto.TransactionOutput;
-import snowblossom.lib.NetworkParams;
-import snowblossom.lib.HexUtil;
-import snowblossom.lib.AddressUtil;
-import snowblossom.lib.AddressSpecHash;
-import snowblossom.lib.SignatureUtil;
-import com.google.protobuf.ByteString;
-import java.util.HashSet;
-import com.google.common.collect.ImmutableList;
-import snowblossom.lib.DigestUtil;
-import snowblossom.proto.AddressSpec;
-import snowblossom.lib.TransactionUtil;
-
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class Construction {
@@ -239,7 +225,7 @@ public class Construction {
 
     }
     
-		inner.setFee(input_value - output_value);
+    inner.setFee(input_value - output_value);
     HashSet<PublicKey> needed_signers = new HashSet<>();
     for(PublicKey pk : req.getPublicKeys())
     {
@@ -253,7 +239,7 @@ public class Construction {
       }
     }
 
-		snowblossom.proto.Transaction.Builder tx = snowblossom.proto.Transaction.newBuilder();
+    snowblossom.proto.Transaction.Builder tx = snowblossom.proto.Transaction.newBuilder();
 
     ByteString inner_data= inner.build().toByteString();
     tx.setInnerData(inner_data);
@@ -261,7 +247,7 @@ public class Construction {
 
     ConstructionPayloadsResponse resp = new ConstructionPayloadsResponse();
 
-		resp.setUnsignedTransaction( HexUtil.getHexString(tx.build().toByteString()));
+    resp.setUnsignedTransaction( HexUtil.getHexString(tx.build().toByteString()));
 
     for(PublicKey pk : needed_signers)
     {
@@ -276,8 +262,6 @@ public class Construction {
       // Left padding the 20-byte sha1 hash to be a 32-byte hash
       // as rosetta client libraries expect
       hash_data = zero_byte.concat(hash_data);
-
-      System.out.println("LORK payload: " + HexUtil.getHexString( hash_data ) );
 
       load.setHexBytes( HexUtil.getHexString( hash_data ));
       load.setAccountIdentifier( new AccountIdentifier().address( hash.toAddressString(params) ) );
@@ -341,4 +325,3 @@ public class Construction {
   }
 
 }
-

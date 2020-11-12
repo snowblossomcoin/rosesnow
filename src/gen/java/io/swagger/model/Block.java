@@ -13,7 +13,7 @@ import java.util.List;
  * Blocks contain an array of Transactions that occurred at a particular BlockIdentifier. A hard requirement for blocks returned by Rosetta implementations is that they MUST be _inalterable_: once a client has requested and received a block identified by a specific BlockIndentifier, all future calls for that same BlockIdentifier must return the same block contents.
  **/
 @Schema(description = "Blocks contain an array of Transactions that occurred at a particular BlockIdentifier. A hard requirement for blocks returned by Rosetta implementations is that they MUST be _inalterable_: once a client has requested and received a block identified by a specific BlockIndentifier, all future calls for that same BlockIdentifier must return the same block contents.")
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-11-12T07:15:46.859Z[GMT]")
 public class Block   {
   @JsonProperty("block_identifier")
   private BlockIdentifier blockIdentifier = null;
@@ -22,7 +22,7 @@ public class Block   {
   @JsonProperty("timestamp")
   private Long timestamp = null;
   @JsonProperty("transactions")
-  private List<Transaction> transactions = new ArrayList<>();
+  private List<Transaction> transactions = new ArrayList<Transaction>();
   @JsonProperty("metadata")
   private Object metadata = null;
   /**
