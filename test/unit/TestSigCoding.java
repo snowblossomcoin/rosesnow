@@ -98,5 +98,45 @@ public class TestSigCoding
 
   }
 
+  /**
+   * Sign something with ECDSA/NONE with zero padding and verify with ECDSA/SHA1
+   */ 
+  @Test
+  public void testSigPadSha1() throws Exception
+  {
+    WalletKeyPair wkp = KeyUtil.generateWalletStandardECKey();
+
+    AddressSpec addr_spec = AddressUtil.getSimpleSpecForKey( wkp );
+    SigSpec sig_spec = addr_spec.getSigSpecs(0);
+    
+    java.security.PrivateKey priv_key = KeyUtil.decodePrivateKey(wkp.getPrivateKey(), "ECDSA");
+    java.security.PublicKey pub_key = SignatureUtil.decodePublicKey(sig_spec);
+
+    ByteString tx_hash = null;
+    {
+      byte[] b = new byte[32];
+      Random rnd = new Random();
+      rnd.nextBytes(b);
+      tx_hash = ByteString.copyFrom(b);
+    }
+
+    java.security.Signature sig_engine = java.security.Signature.getInstance("NONEwithECDSA","BC");
+    sig_engine.initSign(priv_key);
+    ByteString sha1_tx_hash = RoseUtil.hashSha1(tx_hash);
+    ByteString zero_byte = ByteString.copyFrom(new byte[1]);
+
+    while (sha1_tx_hash.size() < 32)
+    {
+      sha1_tx_hash = zero_byte.concat(sha1_tx_hash);
+    }
+
+    sig_engine.update( sha1_tx_hash.toByteArray() );
+
+    ByteString signature = ByteString.copyFrom(sig_engine.sign());
+
+    Assert.assertTrue(SignatureUtil.checkSignature(sig_spec, tx_hash, signature));
+
+  }
+
 
 }

@@ -270,7 +270,12 @@ public class Construction {
       SigningPayload load = new SigningPayload();
 
       ByteString hash_data = RoseUtil.hashSha1( tx.getTxHash() );
-      //ByteString hash_data = tx.getTxHash();
+      ByteString zero_byte = ByteString.copyFrom( new byte[ 32 - hash_data.size() ] );
+
+      // https://github.com/coinbase/rosetta-sdk-go/issues/219
+      // Left padding the 20-byte sha1 hash to be a 32-byte hash
+      // as rosetta client libraries expect
+      hash_data = zero_byte.concat(hash_data);
 
       System.out.println("LORK payload: " + HexUtil.getHexString( hash_data ) );
 
