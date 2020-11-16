@@ -61,7 +61,7 @@ public class Mempool {
     snowblossom.proto.Transaction s_tx = node.getMemPool().getTransaction(tx_id);
     if (s_tx != null)
     {
-      resp.setTransaction( RoseUtil.protoToModel(s_tx, node));
+      resp.setTransaction( RoseUtil.protoToModel(s_tx, node, node.getParams()));
     }
 
     return new ResponseContext().entity(resp);

@@ -30,16 +30,64 @@ import snowblossom.lib.TransactionBridge;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class Account 
 {
-  public ResponseContext accountCoins(RequestContext request , AccountCoinsRequest body)
+  public ResponseContext accountCoins(RequestContext request , JsonNode body)
     throws Exception
   {
     AccountCoinsRequest req = new ObjectMapper().readValue(body.toString(), AccountCoinsRequest.class);
+    NetworkIdentifier id = req.getNetworkIdentifier();
+    AccountIdentifier acct = req.getAccountIdentifier();
     
-    return new ResponseContext().status(Status.INTERNAL_SERVER_ERROR).entity( "Not implemented" );
 
+    ChainHash block_hash = null;
+    int block_idx;
+    SnowBlossomNode node = RoseSnow.getNode(id);
+
+    StubHolder stub_holder = RoseSnow.getClient(id);
+
+    if (block_hash == null)
+    {
+      BlockHeader head = node.getBlockIngestor().getHead().getHeader();
+      block_hash = new ChainHash( head.getSnowHash());
+
+    }
+    BlockHeader header = node.getDB().getBlockSummaryMap().get(block_hash.getBytes()).getHeader();
+
+    AddressSpecHash addr = new AddressSpecHash( acct.getAddress(), node.getParams());
+
+
+    List<TransactionBridge> bridges = GetUTXOUtil.getSpendableValidatedStatic(
+      addr, 
+      stub_holder.getBlockingStub(), 
+      header.getUtxoRootHash());
+
+   
+    AccountCoinsResponse resp = new AccountCoinsResponse();
+    LinkedList<Coin> coins = new LinkedList<>();
+    for(TransactionBridge br : bridges)
+    {
+      Coin c = new Coin();
+      c.setAmount( RoseUtil.getSnowAmount( br.value, node.getParams() ));
+
+      ChainHash tx_out = new ChainHash(br.in.getSrcTxId());
+      int out_idx = br.in.getSrcTxOutIdx();
+
+      c.setCoinIdentifier( new CoinIdentifier().identifier( tx_out.toString() + ":" + out_idx));
+
+      coins.add(c);
+
+    }
+    if (req.isIncludeMempool())
+    {
+      // TODO include mempool
+
+    }
+    resp.setCoins(coins);
+    resp.setBlockIdentifier( new BlockIdentifier().hash(block_hash.toString()).index( (long) header.getBlockHeight()));
+
+    return new ResponseContext().entity(resp);
   }
 
-
+   
   public ResponseContext accountBalance(RequestContext request , JsonNode body) 
     throws Exception
   {

@@ -61,6 +61,7 @@ public class Network
     allow.getOperationStatuses().add(new OperationStatus().status("CONFIRMED").successful(true));
     allow.getOperationStatuses().add(new OperationStatus().status("PENDING").successful(true));
     allow.setHistoricalBalanceLookup(true);
+    allow.setMempoolCoins(true);
     options.setAllow(allow);
 
 

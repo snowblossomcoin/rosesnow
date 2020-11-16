@@ -86,11 +86,12 @@ public class ConstructionE2E
       while(true)
       {
         System.out.println("Waiting for balance on " + gen_addr);
-        AccountBalanceResponse bal = req("/account/balance", 
-          new AccountBalanceRequest()
+        AccountCoinsResponse bal = req("/account/coins", 
+          new AccountCoinsRequest()
             .accountIdentifier(a_id)
-            .networkIdentifier(net_id),
-          AccountBalanceResponse.class);
+            .networkIdentifier(net_id)
+            .includeMempool(true),
+          AccountCoinsResponse.class);
 
         if (bal.getCoins() != null)
         {

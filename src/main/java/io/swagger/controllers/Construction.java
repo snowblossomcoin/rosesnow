@@ -139,10 +139,7 @@ public class Construction {
 
     NetworkIdentifier id = req.getNetworkIdentifier();
     
-    // TODO - this operation should not be online
-    SnowBlossomNode node = RoseSnow.getNode(id);
-    
-    Transaction tx = RoseUtil.protoToModel(s_tx, node);
+    Transaction tx = RoseUtil.protoToModel(s_tx, null, params);
 
     ConstructionParseResponse resp = new ConstructionParseResponse();
     for(Operation op : tx.getOperations())

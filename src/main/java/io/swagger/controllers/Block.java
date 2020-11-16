@@ -73,7 +73,7 @@ public class Block
 
       for( snowblossom.proto.Transaction s_tx : blk.getTransactionsList() )
       {
-        b.getTransactions().add( RoseUtil.protoToModel(s_tx, node) );
+        b.getTransactions().add( RoseUtil.protoToModel(s_tx, node, node.getParams()) );
       }
 
 
@@ -99,7 +99,7 @@ public class Block
 
     BlockTransactionResponse resp = new BlockTransactionResponse();
 
-    resp.setTransaction( RoseUtil.protoToModel(s_tx, node) );
+    resp.setTransaction( RoseUtil.protoToModel(s_tx, node, node.getParams()) );
 
     return new ResponseContext().entity( resp );
   }

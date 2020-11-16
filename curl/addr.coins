@@ -1,0 +1,4 @@
+curl -d '{"network_identifier": {"blockchain":"snowblossom","network":"testnet"}, "account_identifier":{"address":"snowtest:rg6hllwurpv5kxnpuncu6e4qrzycrjsg6vzukeac"} }' -H "Content-Type: application/json" http://localhost:8080/account/coins | jq .
+
+echo ""
+
