@@ -112,11 +112,18 @@ public class ConstructionE2E
     ConstructionPayloadsResponse payloads_resp = null;
     { // get payloads
 
+      Assert.assertTrue(coins.size() > 0);
       Coin coin = coins.get(0);
 
       ConstructionPayloadsRequest payload_req = new ConstructionPayloadsRequest();
       payload_req.setNetworkIdentifier(net_id);
       payload_req.setPublicKeys( ImmutableList.of(pub_key) );
+
+
+      System.out.println("CCC: " + coin);
+      long val = Long.parseLong(coin.getAmount().getValue());
+
+      Assert.assertTrue(val > 0L);
 
 
 

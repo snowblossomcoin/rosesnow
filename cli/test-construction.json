@@ -4,7 +4,7 @@
   "blockchain": "snowblossom",
   "network": "testnet"
  },
- "data_directory": "/data/snowblossom/cli-testnet_9",
+ "data_directory": "/data/snowblossom/cli-testnet-const",
  "http_timeout": 300,
  "max_retries": 5,
  "retry_elapsed_time": 0,

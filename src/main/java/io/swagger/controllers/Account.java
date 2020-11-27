@@ -26,6 +26,8 @@ import snowblossom.client.GetUTXOUtil;
 import snowblossom.proto.BlockHeader;
 import snowblossom.lib.AddressSpecHash;
 import snowblossom.lib.TransactionBridge;
+import snowblossom.lib.NetworkParams;
+import com.google.common.collect.ImmutableList;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class Account 
@@ -39,10 +41,9 @@ public class Account
     
 
     ChainHash block_hash = null;
-    int block_idx;
     SnowBlossomNode node = RoseSnow.getNode(id);
-
     StubHolder stub_holder = RoseSnow.getClient(id);
+    NetworkParams params = RoseUtil.getParams(id);
 
     if (block_hash == null)
     {
@@ -54,34 +55,48 @@ public class Account
 
     AddressSpecHash addr = new AddressSpecHash( acct.getAddress(), node.getParams());
 
+    List<TransactionBridge> bridges;
 
-    List<TransactionBridge> bridges = GetUTXOUtil.getSpendableValidatedStatic(
-      addr, 
-      stub_holder.getBlockingStub(), 
-      header.getUtxoRootHash());
+
+    if ((req.isIncludeMempool() != null) && (req.isIncludeMempool().booleanValue()))
+    {
+      bridges = ImmutableList.copyOf(new GetUTXOUtil( stub_holder, params).getSpendableWithMempool(addr).values());
+
+    }
+    else
+    {
+      bridges = GetUTXOUtil.getSpendableValidatedStatic(
+        addr, 
+        stub_holder.getBlockingStub(), 
+        header.getUtxoRootHash());
+    }
+
 
    
     AccountCoinsResponse resp = new AccountCoinsResponse();
     LinkedList<Coin> coins = new LinkedList<>();
     for(TransactionBridge br : bridges)
     {
-      Coin c = new Coin();
-      c.setAmount( RoseUtil.getSnowAmount( br.value, node.getParams() ));
+      if (!br.spent)
+      {
+        Coin c = new Coin();
+        c.setAmount( RoseUtil.getSnowAmount( br.value, node.getParams() ));
 
-      ChainHash tx_out = new ChainHash(br.in.getSrcTxId());
-      int out_idx = br.in.getSrcTxOutIdx();
+        ChainHash tx_out = new ChainHash(br.in.getSrcTxId());
+        int out_idx = br.in.getSrcTxOutIdx();
 
-      c.setCoinIdentifier( new CoinIdentifier().identifier( tx_out.toString() + ":" + out_idx));
+        c.setCoinIdentifier( new CoinIdentifier().identifier( tx_out.toString() + ":" + out_idx));
 
-      coins.add(c);
-
-    }
-    if (req.isIncludeMempool())
-    {
-      // TODO include mempool
+        coins.add(c);
+      }
 
     }
+
     resp.setCoins(coins);
+
+    // TODO - there is a race condition where if mempool check is set
+    // the block could have changed between our first lookup and our second
+    // so this might not be accurate
     resp.setBlockIdentifier( new BlockIdentifier().hash(block_hash.toString()).index( (long) header.getBlockHeight()));
 
     return new ResponseContext().entity(resp);

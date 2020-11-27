@@ -198,6 +198,7 @@ public class Construction {
           .setSpecHash(hs.getBytes())
           .setSrcTxId( HexUtil.hexStringToBytes( src_tx_str ) )
           .setSrcTxOutIdx( idx )
+          .setValue(v)
           .build();
 
         inner.addInputs(in);
