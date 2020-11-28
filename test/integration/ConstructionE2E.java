@@ -113,31 +113,38 @@ public class ConstructionE2E
     { // get payloads
 
       Assert.assertTrue(coins.size() > 0);
-      Coin coin = coins.get(0);
+      long total_val = 0;
 
       ConstructionPayloadsRequest payload_req = new ConstructionPayloadsRequest();
       payload_req.setNetworkIdentifier(net_id);
       payload_req.setPublicKeys( ImmutableList.of(pub_key) );
 
+      Currency currency = null;
 
-      System.out.println("CCC: " + coin);
-      long val = Long.parseLong(coin.getAmount().getValue());
+      for(Coin coin : coins)
+      {
+        long val = Long.parseLong(coin.getAmount().getValue());
+        Assert.assertTrue(val > 0L);
 
-      Assert.assertTrue(val > 0L);
+        currency = coin.getAmount().getCurrency();
 
 
+        total_val += val;
+        payload_req.getOperations().add( new Operation()
+          .type("INPUT")
+          .account(a_id)
+          .amount(new Amount().value("-" + coin.getAmount().getValue()).currency(currency))
+          .coinChange( new CoinChange().coinIdentifier(coin.getCoinIdentifier()).coinAction(CoinAction.SPENT))
+          );
 
-      payload_req.getOperations().add( new Operation()
-        .type("INPUT")
-        .account(a_id)
-        .amount(new Amount().value("-" + coin.getAmount().getValue()).currency(coin.getAmount().getCurrency()))
-        .coinChange( new CoinChange().coinIdentifier(coin.getCoinIdentifier()).coinAction(CoinAction.SPENT))
-        );
+      }
+
+
 
       payload_req.getOperations().add( new Operation()
         .type("OUTPUT")
         .account(a_id)
-        .amount(coin.getAmount())
+        .amount(new Amount().value("" + total_val).currency(currency))
       );
 
       payloads_resp = req("/construction/payloads", payload_req, ConstructionPayloadsResponse.class);

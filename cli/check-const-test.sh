@@ -1,5 +1,5 @@
 
-mkdir -p /data/snowblossom/cli-testnet-const 
+mkdir -p /data/snowblossom/cli-testnet
 
-rosetta-cli --configuration-file test-construction.json check:construction
+rosetta-cli --configuration-file snowblossom-config-testnet.json check:construction
 

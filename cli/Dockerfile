@@ -6,6 +6,10 @@ RUN apt-get install --yes curl vim
 
 RUN curl -sSfL https://raw.githubusercontent.com/coinbase/rosetta-cli/master/scripts/install.sh | sh -s
 
-COPY . . 
+COPY . /snowconfig
+WORKDIR /snowconfig
+
 CMD bash
 
+# docker build . -t rosetta_cli:local
+#  docker run --rm -it --network host rosetta_cli:local
