@@ -77,4 +77,4 @@ CMD /usr/share/jetty9/bin/jetty.sh run
 # or
 # docker build --build-arg REFSPEC=$(git rev-parse HEAD) -t rosesnow-rosetta:dev .
 #
-# docker run -it --rm -p 8080:8080/tcp --network host rosesnow-rosetta:dev
+# docker run -it --rm -p --network host rosesnow-rosetta:dev

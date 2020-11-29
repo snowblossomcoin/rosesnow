@@ -11,5 +11,5 @@ WORKDIR /snowconfig
 
 CMD bash
 
-# docker build . -t rosetta_cli:local
-#  docker run --rm -it --network host rosetta_cli:local
+#  docker run --rm -it --network host snowblossom/rosetta-cli
+
