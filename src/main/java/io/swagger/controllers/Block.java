@@ -1,30 +1,18 @@
 package io.swagger.controllers;
 
-import io.swagger.oas.inflector.models.RequestContext;
-import io.swagger.oas.inflector.models.ResponseContext;
-import javax.ws.rs.core.Response.Status;
-
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import java.io.File;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.model.*;
-
 import io.swagger.model.BlockRequest;
 import io.swagger.model.BlockResponse;
 import io.swagger.model.BlockTransactionRequest;
 import io.swagger.model.BlockTransactionResponse;
-import io.swagger.model.Error;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.oas.inflector.models.RequestContext;
+import io.swagger.oas.inflector.models.ResponseContext;
 import org.snowblossom.rosesnow.RoseSnow;
 import org.snowblossom.rosesnow.RoseUtil;
 import snowblossom.lib.ChainHash;
-import snowblossom.lib.Globals;
 import snowblossom.node.SnowBlossomNode;
-import snowblossom.proto.BlockHeader;
-
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class Block
@@ -105,4 +93,3 @@ public class Block
   }
 
 }
-

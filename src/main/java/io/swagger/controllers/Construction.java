@@ -34,7 +34,6 @@ import snowblossom.lib.HexUtil;
 import snowblossom.lib.NetworkParams;
 import snowblossom.lib.TransactionUtil;
 import snowblossom.lib.ValidationException;
-import snowblossom.node.SnowBlossomNode;
 import snowblossom.proto.AddressSpec;
 import snowblossom.proto.TransactionInner;
 import snowblossom.proto.TransactionInput;
@@ -123,7 +122,7 @@ public class Construction {
     long suggested_fee = Math.round(Globals.BASIC_FEE * 500);
 
     resp.setSuggestedFee( ImmutableList.of( RoseUtil.getSnowAmount(suggested_fee, params)));
-    resp.setMetadata(body);
+    resp.setMetadata("");
 
     return new ResponseContext().entity(resp);
   }
