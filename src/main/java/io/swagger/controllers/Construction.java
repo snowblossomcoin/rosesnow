@@ -121,6 +121,8 @@ public class Construction {
 
     long suggested_fee = Math.round(Globals.BASIC_FEE * 500);
 
+    // TODO - get estimate tx size from options
+    // then use that
     resp.setSuggestedFee( ImmutableList.of( RoseUtil.getSnowAmount(suggested_fee, params)));
     resp.setMetadata("");
 
@@ -282,6 +284,8 @@ public class Construction {
   
     ConstructionPreprocessResponse resp = new ConstructionPreprocessResponse();
     HashSet<AccountIdentifier> needed_keys = new HashSet<>();
+
+    // TODO - estimate transaction size and send as options
 
     for(Operation op : req.getOperations())
     {
