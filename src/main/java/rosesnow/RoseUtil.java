@@ -1,5 +1,11 @@
 package org.snowblossom.rosesnow;
 
+
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.minidev.json.JSONObject;
+
 import duckutil.ConfigMem;
 import io.swagger.model.*;
 import io.swagger.model.NetworkIdentifier;
@@ -268,5 +274,17 @@ public class RoseUtil
     return s;
 
   }
- 
+
+
+  /** Convert a minidev json object into the jackson.databind one */
+  public static JsonNode minidevToNode(JSONObject obj)
+    throws Exception
+  {
+    ObjectMapper object_mapper = new ObjectMapper();
+    JsonNode json_node = object_mapper.readTree(obj.toString());
+
+    return json_node;
+
+  }
+
 }

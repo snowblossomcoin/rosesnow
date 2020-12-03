@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.swagger.model.*;
 import io.swagger.model.ConstructionCombineRequest;
+import snowblossom.client.StubHolder;
 import io.swagger.model.ConstructionCombineResponse;
 import io.swagger.model.ConstructionDeriveRequest;
 import io.swagger.model.ConstructionDeriveResponse;
@@ -22,8 +23,10 @@ import io.swagger.model.ConstructionSubmitRequest;
 import io.swagger.model.TransactionIdentifierResponse;
 import io.swagger.oas.inflector.models.RequestContext;
 import io.swagger.oas.inflector.models.ResponseContext;
+import java.util.Map;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Collection;
 import org.snowblossom.rosesnow.RoseSnow;
 import org.snowblossom.rosesnow.RoseUtil;
 import snowblossom.lib.AddressSpecHash;
@@ -38,6 +41,9 @@ import snowblossom.proto.AddressSpec;
 import snowblossom.proto.TransactionInner;
 import snowblossom.proto.TransactionInput;
 import snowblossom.proto.TransactionOutput;
+import snowblossom.proto.FeeEstimate;
+import snowblossom.proto.NullRequest;
+import net.minidev.json.JSONObject;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class Construction {
@@ -121,10 +127,28 @@ public class Construction {
 
     long suggested_fee = Math.round(Globals.BASIC_FEE * 500);
 
-    // TODO - get estimate tx size from options
-    // then use that
+    Object options = req.getOptions();
+
+    int tx_size_estimate = 300;
+    if (options != null)
+    {
+      Map m = (Map) options;
+      if (m.containsKey("tx_size_estimate"))
+      {
+        tx_size_estimate = (int) m.get("tx_size_estimate");
+      }
+      
+    }
+    System.out.println("ZZZ using size estimate: " + tx_size_estimate);
+
+    StubHolder stub_holder = RoseSnow.getClient(req.getNetworkIdentifier());
+    FeeEstimate fe = stub_holder.getBlockingStub().getFeeEstimate( NullRequest.newBuilder().build() );
+    suggested_fee = Math.round( fe.getFeePerByte() * tx_size_estimate );
+
+    JSONObject metadata = new JSONObject();
+
     resp.setSuggestedFee( ImmutableList.of( RoseUtil.getSnowAmount(suggested_fee, params)));
-    resp.setMetadata("");
+    resp.setMetadata(RoseUtil.minidevToNode(metadata));
 
     return new ResponseContext().entity(resp);
   }
@@ -285,7 +309,8 @@ public class Construction {
     ConstructionPreprocessResponse resp = new ConstructionPreprocessResponse();
     HashSet<AccountIdentifier> needed_keys = new HashSet<>();
 
-    // TODO - estimate transaction size and send as options
+    HashSet<AddressSpecHash> needed_claims = new HashSet<>();
+    TransactionInner inner = buildInner(req.getOperations(), needed_claims, params);
 
     for(Operation op : req.getOperations())
     {
@@ -294,6 +319,12 @@ public class Construction {
         needed_keys.add(op.getAccount());
       }
     }
+
+
+    JSONObject options = new JSONObject();
+    int size_est = inner.toByteString().size() + 16 + (80 * needed_claims.size()) + 30;
+    options.put("tx_size_estimate", size_est);
+    resp.setOptions( RoseUtil.minidevToNode( options ) );
 
     resp.setRequiredPublicKeys(ImmutableList.copyOf(needed_keys));
 
@@ -322,6 +353,68 @@ public class Construction {
     resp.setTransactionIdentifier( new TransactionIdentifier().hash(HexUtil.getHexString( s_tx.getTxHash() ) ));
 
     return new ResponseContext().entity(resp);
+
+  }
+
+
+  protected TransactionInner buildInner(Collection<Operation> ops, 
+    HashSet<AddressSpecHash> needed_claims,
+    NetworkParams params
+  )
+    throws ValidationException
+  {
+    TransactionInner.Builder inner = TransactionInner.newBuilder();
+    inner.setVersion(1);
+    long input_value=0;
+    long output_value=0;
+
+    for(Operation op : ops )
+    {
+      if (op.getType().equals("INPUT"))
+      {
+        AddressSpecHash hs = new AddressSpecHash( op.getAccount().getAddress(), params );
+        long v = Long.parseLong(op.getAmount().getValue());
+
+        v=-v; // We think in positive terms for this
+        input_value += v;
+
+        String coin_id = op.getCoinChange().getCoinIdentifier().getIdentifier();
+        String src_tx_str = coin_id.split(":")[0];
+        int idx = Integer.parseInt(coin_id.split(":")[1]);
+
+        needed_claims.add(hs);
+        TransactionInput in = TransactionInput.newBuilder()
+          .setSpecHash(hs.getBytes())
+          .setSrcTxId( HexUtil.hexStringToBytes( src_tx_str ) )
+          .setSrcTxOutIdx( idx )
+          .setValue(v)
+          .build();
+
+        inner.addInputs(in);
+
+      }
+      else if (op.getType().equals("OUTPUT"))
+      {
+        AddressSpecHash hs = new AddressSpecHash( op.getAccount().getAddress(), params );
+        long v = Long.parseLong(op.getAmount().getValue());
+        output_value += v;
+        TransactionOutput out = TransactionOutput.newBuilder()
+          .setValue(v)
+          .setRecipientSpecHash(hs.getBytes())
+          .build();
+
+        inner.addOutputs(out);
+      }
+      else
+      {
+        throw new ValidationException("Unexpected op type: " + op.getType());
+      }
+
+    }
+    
+    inner.setFee(input_value - output_value);
+
+    return inner.build();
 
   }
 
