@@ -79,7 +79,11 @@ If you want the built one it is at:
     
     docker pull snowblossom/rosetta-cli:latest
 
+## Release Notes
 
+### v0.4 - API version 1.4.8
+
+Construction and data checks are passing.  The fees are being set correctly.
 
 
 

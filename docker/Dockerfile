@@ -32,7 +32,7 @@ WORKDIR /home/snowblossom
 RUN mkdir /home/snowblossom/rosesnow
 
 WORKDIR /home/snowblossom/rosesnow
-ARG REFSPEC=v0.3
+ARG REFSPEC=v0.4
 RUN git init . \
   && git remote add origin https://github.com/snowblossomcoin/rosesnow.git \
   && git fetch origin ${REFSPEC} \
