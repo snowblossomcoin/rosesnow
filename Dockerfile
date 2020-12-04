@@ -28,8 +28,15 @@ RUN useradd -ms /bin/bash snowblossom
 RUN chown -R snowblossom:snowblossom /home/snowblossom
 
 USER snowblossom
-COPY . /home/snowblossom/rosesnow-copy
 WORKDIR /home/snowblossom
+
+# Just to load bazel with files to speed up subsequent builds
+RUN git clone https://github.com/snowblossomcoin/snowblossom snowblossom.git
+WORKDIR /home/snowblossom/snowblossom.git
+RUN bazel build :all
+
+WORKDIR /home/snowblossom
+COPY . /home/snowblossom/rosesnow-copy
 RUN git clone rosesnow-copy rosesnow
 
 WORKDIR /home/snowblossom/rosesnow
