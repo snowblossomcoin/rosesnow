@@ -28,7 +28,9 @@ RUN useradd -ms /bin/bash snowblossom
 RUN chown -R snowblossom:snowblossom /home/snowblossom
 
 USER snowblossom
-COPY . /home/snowblossom/rosesnow
+COPY . /home/snowblossom/rosesnow-copy
+WORKDIR /home/snowblossom
+RUN git clone rosesnow-copy rosesnow
 
 WORKDIR /home/snowblossom/rosesnow
 
