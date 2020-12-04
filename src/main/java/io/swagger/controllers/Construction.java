@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.swagger.model.*;
 import io.swagger.model.ConstructionCombineRequest;
-import snowblossom.client.StubHolder;
 import io.swagger.model.ConstructionCombineResponse;
 import io.swagger.model.ConstructionDeriveRequest;
 import io.swagger.model.ConstructionDeriveResponse;
@@ -23,12 +22,14 @@ import io.swagger.model.ConstructionSubmitRequest;
 import io.swagger.model.TransactionIdentifierResponse;
 import io.swagger.oas.inflector.models.RequestContext;
 import io.swagger.oas.inflector.models.ResponseContext;
-import java.util.Map;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Collection;
+import java.util.Map;
+import net.minidev.json.JSONObject;
 import org.snowblossom.rosesnow.RoseSnow;
 import org.snowblossom.rosesnow.RoseUtil;
+import snowblossom.client.StubHolder;
 import snowblossom.lib.AddressSpecHash;
 import snowblossom.lib.AddressUtil;
 import snowblossom.lib.DigestUtil;
@@ -38,12 +39,11 @@ import snowblossom.lib.NetworkParams;
 import snowblossom.lib.TransactionUtil;
 import snowblossom.lib.ValidationException;
 import snowblossom.proto.AddressSpec;
+import snowblossom.proto.FeeEstimate;
+import snowblossom.proto.NullRequest;
 import snowblossom.proto.TransactionInner;
 import snowblossom.proto.TransactionInput;
 import snowblossom.proto.TransactionOutput;
-import snowblossom.proto.FeeEstimate;
-import snowblossom.proto.NullRequest;
-import net.minidev.json.JSONObject;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaInflectorServerCodegen", date = "2020-10-18T05:48:04.106Z[GMT]")
 public class Construction {
@@ -139,7 +139,6 @@ public class Construction {
       }
       
     }
-    System.out.println("ZZZ using size estimate: " + tx_size_estimate);
 
     StubHolder stub_holder = RoseSnow.getClient(req.getNetworkIdentifier());
     FeeEstimate fe = stub_holder.getBlockingStub().getFeeEstimate( NullRequest.newBuilder().build() );
@@ -322,7 +321,7 @@ public class Construction {
 
 
     JSONObject options = new JSONObject();
-    int size_est = inner.toByteString().size() + 16 + (80 * needed_claims.size()) + 30;
+    int size_est = inner.toByteString().size() + 16 + (125 * needed_claims.size()) + 30;
     options.put("tx_size_estimate", size_est);
     resp.setOptions( RoseUtil.minidevToNode( options ) );
 
@@ -357,6 +356,10 @@ public class Construction {
   }
 
 
+  /**
+   * Does not include claims since we don't have public keys
+   * to build the specs.
+   */
   protected TransactionInner buildInner(Collection<Operation> ops, 
     HashSet<AddressSpecHash> needed_claims,
     NetworkParams params
