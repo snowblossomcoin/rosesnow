@@ -61,7 +61,23 @@ rsync src/gen to src/gen
 
 Manually fix things in controller
 
+# Docker
 
+There is a basic Dockerfile in the top directory.  It builds the current repo.
+
+There is a dockerfile compliant with the Rosetta API expectations in the "docker" directory.
+
+If you want the auto built one it is at:
+    
+    docker pull snowblossom/rosetta:latest
+
+# CLI
+
+There are CLI scripts, test configs and a docker file.
+
+If you want the built one it is at:
+    
+    docker pull snowblossom/rosetta-cli:latest
 
 
 
