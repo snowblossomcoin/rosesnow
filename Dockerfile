@@ -31,11 +31,11 @@ USER snowblossom
 WORKDIR /home/snowblossom
 
 # Just to load bazel with files to speed up subsequent builds
-RUN git clone https://github.com/snowblossomcoin/snowblossom snowblossom.git
-WORKDIR /home/snowblossom/snowblossom.git
-RUN bazel build :all
+#RUN git clone https://github.com/snowblossomcoin/snowblossom snowblossom.git
+#WORKDIR /home/snowblossom/snowblossom.git
+#RUN bazel build :all
+#WORKDIR /home/snowblossom
 
-WORKDIR /home/snowblossom
 COPY . /home/snowblossom/rosesnow-copy
 RUN git clone rosesnow-copy rosesnow
 

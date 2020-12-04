@@ -14,7 +14,7 @@ git_repository(
   name = "build_stack_rules_proto",
   remote = "https://github.com/fireduck64/rules_proto",
 	commit = "8ab7bf0c7c992c893813f7151af4794ec5dd3e3f", 
-  shallow_since = "1579204983 -0800"
+  shallow_since = "1579669787 -0800"
 )
 
 load("@build_stack_rules_proto//:deps.bzl", "io_grpc_grpc_java")

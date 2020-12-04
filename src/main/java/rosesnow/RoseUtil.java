@@ -29,7 +29,6 @@ import org.junit.Assert;
 
 public class RoseUtil
 {
-
   /**
    * Node can be null
    */
