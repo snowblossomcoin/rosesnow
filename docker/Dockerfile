@@ -69,6 +69,7 @@ ENV JETTY_HOME=/usr/share/jetty9/
 ENV JETTY_STATE=/var/lib/jetty9/jetty.state
 ENV JAVA_OPTS=-Djava.awt.headless=true
 
+EXPOSE 8080
 
 CMD /usr/share/jetty9/bin/jetty.sh run
 
