@@ -18,7 +18,7 @@ RUN curl -Ls https://bazel.build/bazel-release.pub.gpg | apt-key add -
 RUN apt-get update -qq \
   && apt-get install -qq --no-install-recommends --no-install-suggests \
     git \
-    default-jdk-headless \
+    openjdk-17-jdk \
     bazel \
     maven \
   && apt-get clean \
@@ -31,10 +31,10 @@ USER snowblossom
 WORKDIR /home/snowblossom
 
 # Just to load bazel with files to speed up subsequent builds
-#RUN git clone https://github.com/snowblossomcoin/snowblossom snowblossom.git
-#WORKDIR /home/snowblossom/snowblossom.git
-#RUN bazel build :all
-#WORKDIR /home/snowblossom
+RUN git clone https://github.com/snowblossomcoin/snowblossom snowblossom.git
+WORKDIR /home/snowblossom/snowblossom.git
+RUN bazel build :all
+WORKDIR /home/snowblossom
 
 COPY . /home/snowblossom/rosesnow-copy
 RUN git clone rosesnow-copy rosesnow
@@ -45,6 +45,7 @@ RUN bazel build :RoseSnow_deploy.jar
 RUN cp bazel-bin/RoseSnow_deploy.jar maven/local-maven-repo/rosesnow/base/1.0/base-1.0.jar
 
 WORKDIR /home/snowblossom/rosesnow/maven
+RUN mvn -v
 RUN mvn package
 
 FROM ubuntu:20.04 as runtime

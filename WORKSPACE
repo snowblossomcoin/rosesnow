@@ -34,18 +34,19 @@ java_grpc_library()
 maven_install(
     artifacts = [
         "com.google.protobuf:protobuf-java:3.5.1",
-        "org.rocksdb:rocksdbjni:6.13.3",
+        "org.rocksdb:rocksdbjni:7.3.1",
         "junit:junit:4.12",
         "commons-codec:commons-codec:1.11",
         "org.apache.commons:commons-math3:3.6.1",
         "io.netty:netty-tcnative-boringssl-static:2.0.28.Final",
-        "org.bouncycastle:bcprov-jdk15on:1.66",
-        "org.bouncycastle:bcpkix-jdk15on:1.66",
+        "org.bouncycastle:bcprov-jdk15on:1.69",
+        "org.bouncycastle:bcpkix-jdk15on:1.69",
+        "org.bouncycastle:bcprov-jdk15to18:1.69",
         "com.thetransactioncompany:jsonrpc2-server:1.11",
-        "net.minidev:json-smart:2.3",
+        "net.minidev:json-smart:2.4.7",
         "com.lambdaworks:scrypt:1.4.0",
         "com.google.zxing:javase:3.4.0",
-        "org.bitcoinj:bitcoinj-core:0.14.7",
+        "org.bitcoinj:bitcoinj-core:0.15.10",
   			"org.bitlet:weupnp:0.1.4",
         "io.netty:netty-handler:4.1.34.Final",
         "io.swagger:swagger-inflector:2.0.5",
@@ -55,7 +56,6 @@ maven_install(
         "org.slf4j:slf4j-nop:1.7.30",
         "ch.qos.logback:logback-classic:1.2.3",
         "ch.qos.logback:logback-core:1.2.3",
-
     ],
     repositories = [
         "https://repo1.maven.org/maven2",
@@ -75,14 +75,14 @@ pinned_maven_install()
 git_repository(
   name = "snowblossom",
   remote = "https://github.com/snowblossomcoin/snowblossom",
-	commit = "8c9c0a444b46ad7f186f29f61b1e55ab5e19c91e",
+	commit = "b6848352d45ba035bd37abbcbdf41b34017b4fcb",
   shallow_since = "1595994852 -0700"
 )
 
 git_repository(
   name = "duckutil",
   remote = "https://github.com/fireduck64/duckutil",
-  commit = "bf1f4e4ba46a814c6e40b53de4921ebea950d84c",
+  commit = "b721d945278dc2069bb9f5c1556161b37d6b4ee8",
   shallow_since = "1576867546 -0800",
 )
 

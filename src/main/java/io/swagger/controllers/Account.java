@@ -60,7 +60,8 @@ public class Account
       bridges = GetUTXOUtil.getSpendableValidatedStatic(
         addr, 
         stub_holder.getBlockingStub(), 
-        header.getUtxoRootHash());
+        header.getUtxoRootHash(),
+        0); // TODO handle multiple shards
     }
 
 
@@ -133,7 +134,8 @@ public class Account
     List<TransactionBridge> bridges = GetUTXOUtil.getSpendableValidatedStatic(
       addr, 
       stub_holder.getBlockingStub(), 
-      header.getUtxoRootHash());
+      header.getUtxoRootHash(),
+      0); // TODO - handle multiple shards
 
    
     AccountBalanceResponse resp = new AccountBalanceResponse();
